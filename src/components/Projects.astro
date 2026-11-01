@@ -1,0 +1,43 @@
+---
+import type { Lang, Locale } from "../content/schema.ts";
+import { t } from "../i18n/index.ts";
+import Icon from "./Icon.astro";
+import Section from "./Section.astro";
+
+interface Props {
+  lang: Lang;
+  locale: Locale;
+}
+
+const { lang, locale } = Astro.props;
+const s = t(lang);
+---
+
+<Section id="projects" heading={s.headings.projects}>
+  <div class="projects">
+    {
+      locale.projects.map((p) => (
+        <article class="card project">
+          <h3 class="project__title">{p.title}</h3>
+          <p class="project__text">{p.text}</p>
+          {(p.github || p.link) && (
+            <div class="project__links">
+              {p.github && (
+                <a class="pill-link" href={p.github} target="_blank" rel="noopener">
+                  <Icon name="github" />
+                  {s.github}
+                </a>
+              )}
+              {p.link && (
+                <a class="pill-link pill-link--accent" href={p.link.url} target="_blank" rel="noopener">
+                  <Icon name="external-link" />
+                  {p.link.label}
+                </a>
+              )}
+            </div>
+          )}
+        </article>
+      ))
+    }
+  </div>
+</Section>

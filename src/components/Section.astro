@@ -1,0 +1,25 @@
+---
+// A collapsible page section: round chevron button plus heading, then the body.
+// Sections are open in the HTML; scripts add the collapsing.
+interface Props {
+  id: string;
+  heading: string;
+  /** Highlights and Interests sit a little closer to their heading. */
+  tight?: boolean;
+}
+
+const { id, heading, tight = false } = Astro.props;
+const bodyId = `${id}-body`;
+---
+
+<section id={id} class="section page-block">
+  <h2 class="section__heading">
+    <button class="section__toggle" type="button" aria-expanded="true" aria-controls={bodyId}>
+      <span class="chevron" aria-hidden="true"></span>
+      {heading}
+    </button>
+  </h2>
+  <div id={bodyId} class:list={["section__body", { "section__body--tight": tight }]}>
+    <slot />
+  </div>
+</section>

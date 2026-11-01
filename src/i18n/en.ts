@@ -1,0 +1,141 @@
+// Interface labels in English. Nothing personal goes here; that lives in content/.
+
+export const en = {
+  locale: "en-US",
+  ogLocale: "en_US",
+  languageName: "English",
+  nav: {
+    top: "About",
+    highlights: "Highlights",
+    experience: "Experience",
+    skills: "Skills",
+    education: "Education",
+    languages: "Languages",
+    projects: "Vibe projects",
+    interests: "Interests",
+    contact: "Contact",
+  },
+  headings: {
+    highlights: "Key highlights",
+    experience: "Professional Experience",
+    skills: "Skills",
+    education: "Education",
+    languages: "Languages",
+    projects: "Vibe projects",
+    interests: "Personal interests",
+    contact: "Contact",
+  },
+  languageSwitch: "Language",
+  mainNav: "Sections",
+  askButton: "Ask AI about me",
+  fitButton: "Check my fit for your role",
+  readCaseStudy: "Read case study",
+  caseStudyComingSoon: "Coming soon",
+  caseStudy: "Case study",
+  present: "Present",
+  showMore: (n: number) => `+ ${n} more`,
+  showLess: "Show less",
+  degrees: "Academic Degrees",
+  certifications: "Certifications",
+  view: "View ↗",
+  close: "Close",
+  github: "GitHub",
+  linkedin: "LinkedIn",
+  email: "Email",
+  privacyLink: "Privacy",
+  // The privacy page (SPEC §10). Keep "12 months" in step with RETENTION_DAYS (365).
+  privacy: (name: string, email: string, ai: { name: string; country: string }, region: string) => ({
+    title: "Privacy",
+    description: `What happens to the text you type into the AI assistant on ${name}'s resume site.`,
+    back: "Back to the resume",
+    intro: "This page explains what happens to the text you type into the AI assistant on this site.",
+    sections: [
+      { heading: "Who runs this site", text: `${name} runs this site personally. Contact: ${email}.` },
+      {
+        heading: "What is stored",
+        text: "When you ask the AI assistant a question or paste a job ad, that text and the time are stored. For a job fit, the score and the job title and company the AI found in the ad are stored too. No IP addresses, tracking cookies or visitor IDs are stored, and the site uses no analytics. While the assistant is open, your conversation is also kept in your own browser tab, so it survives switching language; it disappears when you close the tab.",
+      },
+      {
+        // True once the live database is in that region and the AI provider keeps nothing (for Groq: Zero Data Retention, docs/SETUP.md step A).
+        heading: "Where it's stored",
+        text: `The stored text is kept in a Cloudflare database located in ${region === "EU" ? "the EU" : region}. ${ai.name}, which writes the AI answers, and Cloudflare's search of my notes use your text only to produce the answer and don't keep it.`,
+      },
+      {
+        heading: "Why",
+        text: "To see what visitors want to know and how my profile matches the roles they're hiring for. It helps me stay current with what employers need and keep learning the skills that are in demand.",
+      },
+      { heading: "How long", text: "Stored text is deleted automatically after 12 months." },
+      {
+        heading: "Who processes it",
+        text: `Cloudflare hosts the site, runs the bot check (Turnstile) and searches my notes for answers. ${ai.name} (${ai.country}) generates the AI answers: what you type is sent to ${ai.name} for that.`,
+      },
+      {
+        heading: "Your choices",
+        text: `Please don't paste confidential job ads or personal details. To have your entries deleted, email ${email} and say roughly when you used the assistant and what you typed.`,
+      },
+    ],
+  }),
+  ai: {
+    launcher: "Ask my AI",
+    openLabel: (assistantName: string) => `Open ${assistantName}`,
+    modeAsk: "Ask about me",
+    modeFit: "Analyze job fit",
+    tryAsking: "Try asking",
+    inputPlaceholder: "Ask about my experience…",
+    inputLabel: "Your question",
+    send: "Send",
+    disclaimer: "Text you enter may be stored and reviewed by me to understand how my profile matches roles.",
+    confidential: "Please don't paste confidential job ads.",
+    fitHeading: "Paste a job description",
+    fitIntro:
+      "It will be compared with my experience to show where I fit and where I don't. You can then email the report or save it as a PDF.",
+    fitPlaceholder: "Senior Product Manager, Platform. You'll own our integrations roadmap…",
+    fitLabel: "Job description",
+    analyze: "Analyze fit",
+    tooShort: "Paste a bit more of the job description first.",
+    reading: "Reading the role against my resume…",
+    labels: { strong: "Strong fit", good: "Good fit", partial: "Partial fit", weak: "Weak fit" },
+    outOf: "/ 100",
+    whereMatch: "Where I match",
+    gaps: "Gaps & risks",
+    relevant: "Most relevant experience",
+    share: "Share this analysis with your team",
+    emailIt: "Email it",
+    downloadPdf: "Download PDF",
+    contactAbout: (firstName: string) => `Contact ${firstName} about this role`,
+    tryAnother: "Try another role",
+    fitScore: "Fit score",
+    reportTitle: "Candidate fit analysis",
+    emailSubject: (name: string, title: string) => `Candidate fit: ${name}, ${title}`,
+    contact: "Contact",
+    generatedOn: (site: string) => `Generated on ${site}`,
+    sampleReply: "This preview shows sample answers. To talk to the real AI, run npm run dev:ai.",
+    errorChat: (email: string) => `Sorry, I couldn't answer just now. Try again, or email me at ${email}.`,
+    errorFit: "Couldn't analyze that one. Try again in a moment.",
+    busy: "Lots of questions right now. Please try again in a minute.",
+    // {s} and {m} are filled in by the panel's script.
+    waitRetry: "Lots of questions right now. Trying again in {s} s…",
+    busyLater: "Lots of questions right now. Please try again in about {m} min.",
+    notJobAd: "That doesn't look like a job ad. Paste a job description and I'll compare it with my experience.",
+    resting: (email: string) => `The assistant is resting for today. Please try again tomorrow, or email me at ${email}.`,
+    tooFast: "You're sending messages quickly. Please wait a minute before the next one.",
+    verifyFailed: (email: string) =>
+      `I couldn't confirm that you're a person. Please reload the page and try again, or email me at ${email}.`,
+    fitLimit: (max: string) =>
+      `Up to ${max} characters. The role and requirements are enough; you can leave out the company intro and benefits.`,
+    // {n} and {max} are filled in by the panel's script.
+    jobAdTooLong: "This ad is {n} characters; the limit is {max}. Shorten it, for example by removing the company intro or benefits.",
+    tooLargeChat: "That's more than the AI can take at once. Try a shorter question.",
+    tooLargeFit: "This job ad is too long for the AI right now. Try a shorter version.",
+    // The note about wait times (SPEC §6). Generic on purpose: it has to be true
+    // for anyone using this template, whatever AI plan they pay for. Owners add
+    // their specifics with `assistant.limitsNote` in content.
+    limitsButton: "About wait times",
+    limitsTitle: "Why you might have to wait",
+    limitsText:
+      "Answers come from an AI service that limits how many questions it takes per minute and per day, for all visitors together. If several questions arrive at once, you'll see a short countdown and the assistant tries again by itself. If it asks you to wait, give it a minute and then send your question again.",
+    why: "Why?",
+  },
+};
+
+export type Strings = typeof en;

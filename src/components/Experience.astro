@@ -1,0 +1,57 @@
+---
+import type { Lang, Locale } from "../content/schema.ts";
+import { formatMonth, t } from "../i18n/index.ts";
+import Section from "./Section.astro";
+
+interface Props {
+  lang: Lang;
+  locale: Locale;
+}
+
+const { lang, locale } = Astro.props;
+const s = t(lang);
+/** Bullets shown before "+ N more". */
+const VISIBLE = 3;
+---
+
+<Section id="experience" heading={s.headings.experience}>
+  <div class="jobs">
+    {
+      locale.experience.map((job) => {
+        const extra = job.bullets.length - VISIBLE;
+        return (
+          <div class="job">
+            <div class="job__meta">
+              <div class="job__dates">
+                {formatMonth(job.start, lang)} — {job.end ? formatMonth(job.end, lang) : s.present}
+              </div>
+              <h3 class="job__title">{job.role}</h3>
+              <div class="job__company">{job.company}</div>
+              {job.about && <div class="job__about">{job.about}</div>}
+            </div>
+            {job.bullets.length > 0 && (
+              <div class="job__body">
+                <ul class="dash-list">
+                  {job.bullets.map((b) => (
+                    <li>{b}</li>
+                  ))}
+                </ul>
+                {extra > 0 && (
+                  <button
+                    class="more-button needs-js"
+                    type="button"
+                    aria-expanded="false"
+                    data-more={s.showMore(extra)}
+                    data-less={s.showLess}
+                  >
+                    {s.showMore(extra)}
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      })
+    }
+  </div>
+</Section>

@@ -1,0 +1,50 @@
+---
+// Key highlights: cards in rows of two (one under 614px), always open (owner's
+// decision, October 2026: no collapsing rows). Cards in a row share a height;
+// nothing changes after load, so nothing jumps. Without JavaScript the case
+// studies show in full below the cards.
+import type { Lang, Locale } from "../content/schema.ts";
+import { t } from "../i18n/index.ts";
+import CaseStudyDialog from "./CaseStudyDialog.astro";
+import Section from "./Section.astro";
+
+interface Props {
+  lang: Lang;
+  locale: Locale;
+}
+
+const { lang, locale } = Astro.props;
+const s = t(lang);
+const caseId = (i: number) => `case-study-${i + 1}`;
+---
+
+<Section id="highlights" heading={s.headings.highlights} tight>
+  <div class="highlights">
+    <div class="highlights__grid">
+      {
+        locale.highlights.map((h, i) => (
+          <article class="highlight">
+            <div class="highlight__tag">{h.tag}</div>
+            <h3 class="highlight__title">{h.title}</h3>
+            <p class="highlight__text">{h.text}</p>
+            {h.caseStudy ? (
+              <a class="link-button" href={`#${caseId(i)}`} data-case-study={caseId(i)}>
+                {s.readCaseStudy} →
+              </a>
+            ) : (
+              h.comingSoon && <span class="highlight__soon">{s.caseStudyComingSoon}</span>
+            )}
+          </article>
+        ))
+      }
+    </div>
+    {
+      locale.highlights.map(
+        (h, i) =>
+          h.caseStudy && (
+            <CaseStudyDialog id={caseId(i)} lang={lang} tag={h.tag} title={h.title} caseStudy={h.caseStudy} />
+          ),
+      )
+    }
+  </div>
+</Section>

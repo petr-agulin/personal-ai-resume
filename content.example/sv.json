@@ -1,0 +1,249 @@
+{
+  "$schema": "../schema/locale.schema.json",
+  "meta": {
+    "title": "John Smith — Senior produktchef",
+    "description": "Senior produktchef för B2B SaaS-plattformar och integrationer. Fråga min AI om min erfarenhet eller se hur jag matchar er roll."
+  },
+  "hero": {
+    "tags": [
+      { "text": "Öppen för roller som Senior PM och Group PM", "tone": "green" },
+      { "text": "Austin, Texas eller distans", "tone": "blue" }
+    ],
+    "title": "Senior produktchef",
+    "paragraphs": [
+      "Senior **produktchef** med nio års erfarenhet av **B2B SaaS**, senast med plattforms- och integrationsprodukter för ekonomiteam.",
+      "Jag gör långsamma, konsulttunga arbetsflöden till **självbetjäningsprodukter**, och jag gillar problem där **API:er, partner och prissättning** möts.",
+      "Jag arbetar nära utveckling och design, bedriver **kontinuerlig discovery** och mäter framgång i **kundresultat**, inte i antal levererade funktioner."
+    ]
+  },
+  "highlights": [
+    {
+      "tag": "Plattform · Onboarding",
+      "title": "Onboarding på 9 dagar",
+      "text": "Ersatte en konsultledd ERP-uppsättning med guidad fältmappning och hälsokontroller av synkningen, vilket kortade tiden till drift från 6 veckor till 9 dagar.",
+      "caseStudy": {
+        "facts": [
+          { "label": "Roll", "value": "Senior PM, plattform och integrationer" },
+          { "label": "Team", "value": "2 team, 14 utvecklare, 2 designers" },
+          { "label": "Tidslinje", "value": "5 månader" }
+        ],
+        "blocks": [
+          {
+            "heading": "Bakgrund",
+            "items": [
+              "Nya kunder behövde en konsult för att koppla in sitt ERP-system, och det tog ungefär sex veckor att komma i drift.",
+              "Kostnaden för onboarding begränsade hur många medelstora kunder säljteamet kunde ta emot."
+            ]
+          },
+          {
+            "heading": "Vad jag gjorde",
+            "items": [
+              "Kartlade varje manuellt steg i konsulternas arbetsgång tillsammans med onboardingteamet.",
+              "Utformade guidad fältmappning med rimliga standardval för de tre vanligaste ERP-systemen.",
+              "Lade till hälsokontroller av synkningen så att kunderna själva kunde hitta och rätta fel."
+            ]
+          },
+          {
+            "heading": "Resultat",
+            "items": [
+              "Tiden till drift sjönk från 6 veckor till 9 dagar.",
+              "De flesta nya kunder kommer nu i drift utan konsult."
+            ]
+          },
+          {
+            "heading": "Vad jag lärde mig",
+            "items": ["Den snabbaste lösningen var att ta bort steg, inte att automatisera dem."]
+          }
+        ]
+      }
+    },
+    {
+      "tag": "Prissättning",
+      "title": "Priser som växer med användningen",
+      "text": "Införde en användningsbaserad prisnivå; expansionsintäkterna växte med 22 % på ett år, med under 2 % påverkan på kundbortfallet.",
+      "caseStudy": {
+        "facts": [
+          { "label": "Roll", "value": "Produktchef" },
+          { "label": "Team", "value": "1 team och en arbetsgrupp för prissättning" },
+          { "label": "Tidslinje", "value": "4 månader" }
+        ],
+        "blocks": [
+          {
+            "heading": "Bakgrund",
+            "items": ["Fast pris per användare gav för låga intäkter från snabbväxande kunder och blev för dyrt för små."]
+          },
+          {
+            "heading": "Vad jag gjorde",
+            "items": [
+              "Intervjuade 30 kunder om hur de värderade antalet uppdrag.",
+              "Tog fram tre paketeringsalternativ tillsammans med ekonomi och sälj.",
+              "Rullade ut den användningsbaserade nivån till 1 200 kunder i etapper."
+            ]
+          },
+          {
+            "heading": "Resultat",
+            "items": ["Expansionsintäkterna ökade med 22 % på ett år, med under 2 % påverkan på kundbortfallet."]
+          },
+          {
+            "heading": "Vad jag lärde mig",
+            "items": ["Kunder accepterar användningsbaserade priser när enheten motsvarar värdet de upplever."]
+          }
+        ]
+      }
+    },
+    {
+      "tag": "Ekosystem",
+      "title": "Öppet API och partnerprogram",
+      "text": "Lanserade ett öppet API och ett partnerprogram som växte till över 40 partner; integrationsdrivna affärer nådde 31 % av ny ARR."
+    },
+    {
+      "tag": "Drift",
+      "title": "Ärendeplanering byggd kring kartan",
+      "text": "Lanserade kartbaserad ärendeplanering med schemaförslag, vilket minskade planerarnas tidsåtgång med 40 %."
+    },
+    {
+      "tag": "Aktivering",
+      "title": "Egna dashboards",
+      "text": "Byggde ett verktyg där kunderna själva skapar dashboards, vilket höjde aktiveringen från 18 % till 34 %."
+    }
+  ],
+  "experience": [
+    {
+      "start": "2022-02",
+      "end": null,
+      "company": "Ledgerline",
+      "role": "Senior PM, plattform och integrationer",
+      "about": "AP-automatisering för ekonomiteam i medelstora företag",
+      "bullets": [
+        "Äger roadmapen för ERP-integrationer (NetSuite, Sage Intacct, QuickBooks) för två team med 14 utvecklare och 2 designers.",
+        "Byggde om onboardingen kring guidad fältmappning och hälsokontroller av synkningen; tiden till drift sjönk från 6 veckor till 9 dagar.",
+        "Lanserade det öppna API:et och partnerprogrammet, som nu har över 40 partner.",
+        "Ökade de integrationsdrivna affärerna till 31 % av ny ARR genom att paketera integrationer tillsammans med sälj- och lösningsteamen.",
+        "Är mentor för tre juniora produktchefer."
+      ]
+    },
+    {
+      "start": "2019-03",
+      "end": "2022-01",
+      "company": "Fieldwise",
+      "role": "Produktchef → Senior PM",
+      "about": "SaaS för hantering av fälttjänster",
+      "bullets": [
+        "Lanserade kartbaserad ärendeplanering med schemaoptimering; planerarnas tidsåtgång minskade med 40 %.",
+        "Införde en användningsbaserad prisnivå; expansionsintäkterna ökade med 22 % på ett år.",
+        "Drev ett löpande discoveryprogram med fler än 60 kundintervjuer per kvartal."
+      ]
+    },
+    {
+      "start": "2017-06",
+      "end": "2019-02",
+      "company": "Corvid Analytics",
+      "role": "Associate Product Manager",
+      "about": "BI för e-handelsvarumärken",
+      "bullets": ["Byggde verktyget där kunderna själva skapar dashboards; aktiveringen steg från 18 % till 34 %."]
+    },
+    {
+      "start": "2015-09",
+      "end": "2017-05",
+      "company": "Brightpath Consulting",
+      "role": "Verksamhetsanalytiker",
+      "about": "Teknikkonsultbolag",
+      "bullets": ["ERP-implementeringar för kunder inom tillverkningsindustrin."]
+    }
+  ],
+  "skills": {
+    "featured": {
+      "label": "Produktledning",
+      "items": [
+        "Produktstrategi och roadmaps",
+        "Kontinuerlig discovery och kundintervjuer",
+        "Prissättning och paketering",
+        "API- och plattformsprodukter",
+        "Prioritering och samsyn med intressenter"
+      ]
+    },
+    "groups": [
+      {
+        "label": "Teknik",
+        "icon": "code",
+        "items": ["SQL", "REST-API:er och webhooks", "Grundläggande datamodellering", "Produktanalys"]
+      },
+      {
+        "label": "Verktyg",
+        "icon": "wrench",
+        "wide": true,
+        "items": ["Amplitude", "Looker", "Figma", "Jira", "Linear", "Notion", "Postman", "Miro"]
+      },
+      {
+        "label": "Domäner",
+        "icon": "layers",
+        "items": ["B2B SaaS", "Fintech", "AP-automatisering", "Fälttjänster"]
+      },
+      {
+        "label": "Ledarskap",
+        "icon": "users",
+        "items": ["Mentorskap för juniora produktchefer", "Planering över teamgränser", "Intressenthantering"]
+      }
+    ]
+  },
+  "education": {
+    "degrees": [{ "title": "Kandidatexamen i industriell ekonomi", "org": "Lakeside Institute of Technology" }],
+    "certifications": [
+      {
+        "title": "Product Strategy Program",
+        "org": "Northwind Product Academy",
+        "year": "2021",
+        "file": "certificate-sample.png"
+      },
+      {
+        "title": "Pricing and Packaging Workshop",
+        "org": "Northwind Product Academy",
+        "year": "2020",
+        "url": "https://example.com/certificates/pricing-workshop"
+      }
+    ]
+  },
+  "languages": [
+    { "name": "Engelska", "level": "Modersmål" },
+    {
+      "name": "Spanska",
+      "level": "Professionell arbetsnivå (B2)",
+      "tests": [{ "name": "Exempel på språktest", "result": "B2", "file": "language-test-sample.pdf" }]
+    }
+  ],
+  "projects": [
+    {
+      "title": "Release Notes Bot",
+      "text": "En liten Slack-bot som skriver utkast till release notes utifrån sammanslagna pull requests och ärenden, så att teamet publicerar dem samma dag som releasen.",
+      "github": "https://example.com/github/release-notes-bot",
+      "link": { "url": "https://example.com/release-notes-bot", "label": "Testa demon" }
+    },
+    {
+      "title": "Pricing Calculator",
+      "text": "Ett webbverktyg i kalkylbladsstil för att modellera användningsbaserade prisnivåer före en lansering.",
+      "github": "https://example.com/github/pricing-calculator"
+    }
+  ],
+  "interests": [
+    { "icon": "bike", "name": "Gravelcykling", "text": "Långa helgturer på småvägarna runt Austin." },
+    { "icon": "book-open", "name": "Läsning", "text": "Mest historia, och då och då en affärsbok." },
+    { "icon": "chef-hat", "name": "Matlagning", "text": "Långkokt barbecue och nya recept som vännerna får provsmaka." }
+  ],
+  "contact": {
+    "question": "Rekryterar du till en plattforms- eller integrationsroll? Hör av dig.",
+    "location": "Austin, Texas, USA",
+    "workStatus": "Har arbetstillstånd i USA"
+  },
+  "assistant": {
+    "name": "Johns AI",
+    "subtitle": "Svarar som John, utifrån hans CV",
+    "greeting": "Hej, jag heter John. Fråga mig om mitt arbete, hur jag driver produktutveckling eller vad jag letar efter härnäst.",
+    "starters": [
+      "Vilken är din största produktframgång?",
+      "Hur arbetar du med utvecklare?",
+      "Vilken roll letar du efter härnäst?",
+      "Berätta om ditt arbete med prissättning"
+    ],
+    "limitsNote": "Den här demon körs på en gratis AI-plan, som bara klarar ett par frågor i minuten."
+  }
+}

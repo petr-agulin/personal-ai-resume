@@ -1,0 +1,17 @@
+---
+// The privacy page in each other language, e.g. "/sv/privacy/".
+import type { GetStaticPaths } from "astro";
+import PrivacyPage from "../../components/PrivacyPage.astro";
+import { loadContent } from "../../content/load.ts";
+import type { Lang } from "../../content/schema.ts";
+
+export const getStaticPaths = (() => {
+  const { site } = loadContent();
+  return site.languages.filter((lang) => lang !== site.defaultLanguage).map((lang) => ({ params: { lang } }));
+}) satisfies GetStaticPaths;
+
+const content = loadContent();
+const lang = Astro.params.lang as Lang;
+---
+
+<PrivacyPage content={content} lang={lang} />

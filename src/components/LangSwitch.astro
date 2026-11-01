@@ -1,0 +1,31 @@
+---
+// "EN | SE" in the header. `href` gives the same page in another language.
+import type { Lang, Site } from "../content/schema.ts";
+import { SWITCH_LABEL, t } from "../i18n/index.ts";
+
+interface Props {
+  lang: Lang;
+  site: Site;
+  href: (lang: Lang, site: Site) => string;
+}
+
+const { lang, site, href } = Astro.props;
+---
+
+{
+  site.languages.length > 1 && (
+    <div class="lang-switch" role="group" aria-label={t(lang).languageSwitch}>
+      {site.languages.map((l) => (
+        <a
+          href={href(l, site)}
+          hreflang={l}
+          lang={l}
+          aria-label={t(l).languageName}
+          aria-current={l === lang ? "page" : undefined}
+        >
+          {SWITCH_LABEL[l]}
+        </a>
+      ))}
+    </div>
+  )
+}

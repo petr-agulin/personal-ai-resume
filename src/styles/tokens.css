@@ -1,0 +1,58 @@
+/* Design tokens from the design handoff README. */
+
+:root {
+  --font-sans: "Geist Variable", system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+
+  /* Surfaces */
+  --bg-page: #0d0c11;
+  --bg-card: #131218;
+  --bg-chip: #1e1c27;
+  --bg-header: rgba(13, 12, 17, 0.82);
+  --bg-button-hover: #1a1822;
+
+  /* Text */
+  --text-primary: #ecebf1;
+  --text-body: #b7b5c3;
+  --text-body-2: #c4c2ce;
+  --text-body-3: #d4d2dc;
+  --text-muted: #a3a1b0;
+  --text-muted-2: #8f8d9c;
+  --text-muted-3: #6f6d7c;
+
+  /* Accent */
+  --violet: #a78bfa;
+  --violet-hover: #b9a2fc;
+  --violet-light: #c4b5fd;
+  --violet-lighter: #ddd3fe;
+  --on-violet: #0f0d16;
+
+  /* Status */
+  --green: #8fdcae;
+  --green-tag-text: #b5ecc9;
+  --green-tag-bg: rgba(143, 220, 174, 0.08);
+  --green-tag-border: rgba(143, 220, 174, 0.35);
+  --blue-tag-text: #bcd6fb;
+  --blue-tag-bg: rgba(125, 180, 250, 0.08);
+  --blue-tag-border: rgba(125, 180, 250, 0.35);
+  --amber: #f0c27a;
+  --error: #f3a6a6;
+
+  /* Borders */
+  --border-divider: rgba(255, 255, 255, 0.06);
+  --border-card: rgba(255, 255, 255, 0.07);
+  --border-chip: rgba(255, 255, 255, 0.1);
+  --border-button: rgba(255, 255, 255, 0.14);
+  --border-accent: rgba(167, 139, 250, 0.35);
+
+  /* Radii */
+  --radius-pill: 999px;
+  --radius-card: 16px;
+  --radius-card-sm: 14px;
+  --radius-tile: 10px;
+  --radius-modal: 18px;
+
+  /* Layout */
+  --header-height: 60px;
+  --gutter: 28px;
+}

@@ -1,0 +1,54 @@
+---
+import type { Lang, Locale } from "../content/schema.ts";
+import { t } from "../i18n/index.ts";
+import Icon from "./Icon.astro";
+import Section from "./Section.astro";
+
+interface Props {
+  lang: Lang;
+  locale: Locale;
+}
+
+const { lang, locale } = Astro.props;
+const s = t(lang);
+const { featured, groups } = locale.skills;
+---
+
+<Section id="skills" heading={s.headings.skills}>
+  <div class="skills">
+    {
+      featured && featured.items.length > 0 && (
+        <div class="card">
+          <h3 class="card-label">
+            <Icon name={featured.icon ?? "compass"} />
+            {featured.label}
+          </h3>
+          <ul class="chips" role="list">
+            {featured.items.map((item) => (
+              <li class="chip">{item}</li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+    {
+      groups.length > 0 && (
+        <div class="skills__groups">
+          {groups.map((g) => (
+            <div class:list={["card", "skills__group", { "skills__group--wide": g.wide }]}>
+              <h3 class="card-label">
+                <Icon name={g.icon} />
+                {g.label}
+              </h3>
+              <ul class="chips" role="list">
+                {g.items.map((item) => (
+                  <li class="chip">{item}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</Section>

@@ -1,0 +1,249 @@
+{
+  "$schema": "../schema/locale.schema.json",
+  "meta": {
+    "title": "John Smith — Senior Product Manager",
+    "description": "Senior Product Manager for B2B SaaS platforms and integrations. Ask my AI about my experience or check how I fit your role."
+  },
+  "hero": {
+    "tags": [
+      { "text": "Open to Senior & Group PM roles", "tone": "green" },
+      { "text": "Austin, TX or remote", "tone": "blue" }
+    ],
+    "title": "Senior Product Manager",
+    "paragraphs": [
+      "Senior **product manager** with nine years in **B2B SaaS**, most recently on platform and integration products for finance teams.",
+      "I turn slow, services-heavy workflows into **self-serve products**, and I like problems where **APIs, partners and pricing** meet.",
+      "I work closely with engineering and design, run **continuous discovery**, and measure success in **customer outcomes**, not in features shipped."
+    ]
+  },
+  "highlights": [
+    {
+      "tag": "Platform · Onboarding",
+      "title": "Onboarding in 9 days",
+      "text": "Replaced a consultant-led ERP setup with guided field mapping and sync health checks, cutting time-to-live from 6 weeks to 9 days.",
+      "caseStudy": {
+        "facts": [
+          { "label": "Role", "value": "Senior PM, Platform & Integrations" },
+          { "label": "Team", "value": "2 squads, 14 engineers, 2 designers" },
+          { "label": "Timeline", "value": "5 months" }
+        ],
+        "blocks": [
+          {
+            "heading": "Context",
+            "items": [
+              "New customers needed a consultant to connect their ERP, and going live took about six weeks.",
+              "Onboarding cost capped how many mid-market accounts sales could take on."
+            ]
+          },
+          {
+            "heading": "What I did",
+            "items": [
+              "Mapped every manual step in the services playbook together with the onboarding team.",
+              "Designed guided field mapping with sensible defaults for the three most common ERPs.",
+              "Added sync health checks so customers could find and fix errors themselves."
+            ]
+          },
+          {
+            "heading": "Outcome",
+            "items": [
+              "Time-to-live fell from 6 weeks to 9 days.",
+              "Most new accounts now go live without a consultant."
+            ]
+          },
+          {
+            "heading": "What I learned",
+            "items": ["The fastest fix was removing steps, not automating them."]
+          }
+        ]
+      }
+    },
+    {
+      "tag": "Pricing",
+      "title": "Pricing that scales with usage",
+      "text": "Introduced a usage-based tier after packaging research; expansion revenue grew 22% year over year with under 2% churn impact.",
+      "caseStudy": {
+        "facts": [
+          { "label": "Role", "value": "Product Manager" },
+          { "label": "Team", "value": "1 squad and a pricing working group" },
+          { "label": "Timeline", "value": "4 months" }
+        ],
+        "blocks": [
+          {
+            "heading": "Context",
+            "items": ["Flat per-seat pricing undercharged fast-growing customers and overcharged small ones."]
+          },
+          {
+            "heading": "What I did",
+            "items": [
+              "Interviewed 30 customers about how they valued dispatch volume.",
+              "Modelled three packaging options with finance and sales.",
+              "Rolled the usage-based tier out to 1,200 accounts in stages."
+            ]
+          },
+          {
+            "heading": "Outcome",
+            "items": ["Expansion revenue up 22% year over year, with churn impact under 2%."]
+          },
+          {
+            "heading": "What I learned",
+            "items": ["Customers accept usage pricing when the unit matches the value they see."]
+          }
+        ]
+      }
+    },
+    {
+      "tag": "Ecosystem",
+      "title": "Public API and partner program",
+      "text": "Launched the public API and a partner program that grew to 40+ partners; integration-led deals reached 31% of new ARR."
+    },
+    {
+      "tag": "Operations",
+      "title": "Dispatch rebuilt around the map",
+      "text": "Shipped map-based dispatch with scheduling suggestions, cutting dispatcher planning time by 40%."
+    },
+    {
+      "tag": "Activation",
+      "title": "Self-serve dashboards",
+      "text": "Built a self-serve dashboard builder that lifted activation from 18% to 34%."
+    }
+  ],
+  "experience": [
+    {
+      "start": "2022-02",
+      "end": null,
+      "company": "Ledgerline",
+      "role": "Senior PM, Platform & Integrations",
+      "about": "AP automation for mid-market finance teams",
+      "bullets": [
+        "Own the ERP integrations roadmap (NetSuite, Sage Intacct, QuickBooks) across two squads of 14 engineers and 2 designers.",
+        "Rebuilt onboarding around guided field mapping and sync health checks; time-to-live fell from 6 weeks to 9 days.",
+        "Launched the public API and partner program, now with 40+ partners.",
+        "Grew integration-led deals to 31% of new ARR by packaging integrations with the sales and solutions teams.",
+        "Mentor three associate product managers."
+      ]
+    },
+    {
+      "start": "2019-03",
+      "end": "2022-01",
+      "company": "Fieldwise",
+      "role": "Product Manager → Senior PM",
+      "about": "Field service management SaaS",
+      "bullets": [
+        "Shipped map-based dispatch with scheduling optimization; dispatcher planning time down 40%.",
+        "Introduced a usage-based pricing tier; expansion revenue up 22% year over year.",
+        "Ran a standing discovery program of 60+ customer interviews per quarter."
+      ]
+    },
+    {
+      "start": "2017-06",
+      "end": "2019-02",
+      "company": "Corvid Analytics",
+      "role": "Associate Product Manager",
+      "about": "BI for e-commerce brands",
+      "bullets": ["Built the self-serve dashboard builder; activation rose from 18% to 34%."]
+    },
+    {
+      "start": "2015-09",
+      "end": "2017-05",
+      "company": "Brightpath Consulting",
+      "role": "Business Analyst",
+      "about": "Technology consulting",
+      "bullets": ["ERP implementation projects for manufacturing clients."]
+    }
+  ],
+  "skills": {
+    "featured": {
+      "label": "Product Management",
+      "items": [
+        "Product strategy and roadmaps",
+        "Continuous discovery and customer interviews",
+        "Pricing and packaging",
+        "API and platform products",
+        "Prioritization and stakeholder alignment"
+      ]
+    },
+    "groups": [
+      {
+        "label": "Technical",
+        "icon": "code",
+        "items": ["SQL", "REST APIs and webhooks", "Data modelling basics", "Product analytics"]
+      },
+      {
+        "label": "Tools",
+        "icon": "wrench",
+        "wide": true,
+        "items": ["Amplitude", "Looker", "Figma", "Jira", "Linear", "Notion", "Postman", "Miro"]
+      },
+      {
+        "label": "Domains",
+        "icon": "layers",
+        "items": ["B2B SaaS", "Fintech", "AP automation", "Field service"]
+      },
+      {
+        "label": "Leadership",
+        "icon": "users",
+        "items": ["Mentoring APMs", "Cross-team planning", "Stakeholder management"]
+      }
+    ]
+  },
+  "education": {
+    "degrees": [{ "title": "B.S. Industrial Engineering", "org": "Lakeside Institute of Technology" }],
+    "certifications": [
+      {
+        "title": "Product Strategy Program",
+        "org": "Northwind Product Academy",
+        "year": "2021",
+        "file": "certificate-sample.png"
+      },
+      {
+        "title": "Pricing and Packaging Workshop",
+        "org": "Northwind Product Academy",
+        "year": "2020",
+        "url": "https://example.com/certificates/pricing-workshop"
+      }
+    ]
+  },
+  "languages": [
+    { "name": "English", "level": "Native" },
+    {
+      "name": "Spanish",
+      "level": "Professional working proficiency (B2)",
+      "tests": [{ "name": "Sample language test", "result": "B2", "file": "language-test-sample.pdf" }]
+    }
+  ],
+  "projects": [
+    {
+      "title": "Release Notes Bot",
+      "text": "A small Slack bot that drafts release notes from merged pull requests and tickets, so the team publishes notes the same day it ships.",
+      "github": "https://example.com/github/release-notes-bot",
+      "link": { "url": "https://example.com/release-notes-bot", "label": "Try the demo" }
+    },
+    {
+      "title": "Pricing Calculator",
+      "text": "A spreadsheet-style web tool for modelling usage-based pricing tiers before a launch.",
+      "github": "https://example.com/github/pricing-calculator"
+    }
+  ],
+  "interests": [
+    { "icon": "bike", "name": "Gravel cycling", "text": "Long weekend rides on the back roads around Austin." },
+    { "icon": "book-open", "name": "Reading", "text": "Mostly history, and the occasional business book." },
+    { "icon": "chef-hat", "name": "Cooking", "text": "Slow-cooked barbecue and new recipes tested on friends." }
+  ],
+  "contact": {
+    "question": "Hiring for a platform or integrations role? Let's talk.",
+    "location": "Austin, TX, USA",
+    "workStatus": "Authorized to work in the US"
+  },
+  "assistant": {
+    "name": "John's AI",
+    "subtitle": "Answers as John, grounded in his resume",
+    "greeting": "Hi, I'm John. Ask me anything about my work, how I run product, or what I'm looking for next.",
+    "starters": [
+      "What's your biggest product win?",
+      "How do you work with engineering?",
+      "What role are you looking for next?",
+      "Tell me about your pricing work"
+    ],
+    "limitsNote": "This demo runs on a free AI plan, which allows only a couple of questions a minute."
+  }
+}

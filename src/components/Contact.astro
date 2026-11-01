@@ -1,0 +1,60 @@
+---
+import type { Lang, Locale, Site } from "../content/schema.ts";
+import { t } from "../i18n/index.ts";
+import Icon from "./Icon.astro";
+
+interface Props {
+  lang: Lang;
+  site: Site;
+  locale: Locale;
+}
+
+const { lang, site, locale } = Astro.props;
+const s = t(lang);
+const { question, location, workStatus } = locale.contact;
+---
+
+<section id="contact" class="section contact page-block">
+  <h2 class="section__heading">{s.headings.contact}</h2>
+  {question && <p class="contact__question">{question}</p>}
+  {
+    (location || workStatus) && (
+      <div class="contact__lines">
+        {location && (
+          <div class="contact__line">
+            <Icon name="map-pin" size={16} />
+            {location}
+          </div>
+        )}
+        {workStatus && (
+          <div class="contact__line">
+            <Icon name="badge-check" size={16} />
+            {workStatus}
+          </div>
+        )}
+      </div>
+    )
+  }
+  <div class="contact__links">
+    <a class="contact-link" href={`mailto:${site.email}`}>
+      <Icon name="mail" size={18} />
+      {site.email}
+    </a>
+    {
+      site.linkedin && (
+        <a class="contact-link" href={site.linkedin} target="_blank" rel="noopener">
+          <Icon name="linkedin" size={18} />
+          {s.linkedin}
+        </a>
+      )
+    }
+    {
+      site.github && (
+        <a class="contact-link" href={site.github} target="_blank" rel="noopener">
+          <Icon name="github" size={18} />
+          {s.github}
+        </a>
+      )
+    }
+  </div>
+</section>

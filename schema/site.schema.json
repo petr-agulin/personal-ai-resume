@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Your full name. Shown as the big heading, in the footer and in the page title."
+    },
+    "firstName": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What visitors call you, e.g. in \"Contact Jane about this role\". Default: the first word of name."
+    },
+    "initials": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 3,
+      "description": "1–3 letters for the round avatar in the AI panel, e.g. \"JS\"."
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+      "description": "Contact email. Shown on the page and given out by the AI when it can't answer."
+    },
+    "linkedin": {
+      "type": "string",
+      "format": "uri",
+      "description": "Your LinkedIn profile address. Leave out to hide the LinkedIn button."
+    },
+    "github": {
+      "type": "string",
+      "format": "uri",
+      "description": "Your GitHub profile address. Leave out to hide the GitHub button."
+    },
+    "siteUrl": {
+      "type": "string",
+      "format": "uri",
+      "description": "The site's public address, e.g. https://personal-ai-resume.<your-subdomain>.workers.dev. Used for link previews."
+    },
+    "languages": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "en",
+          "sv"
+        ]
+      },
+      "description": "Languages of the site. [\"en\", \"sv\"] needs both en.json and sv.json and shows the EN | SE switch. [\"en\"] hides the switch."
+    },
+    "defaultLanguage": {
+      "type": "string",
+      "enum": [
+        "en",
+        "sv"
+      ],
+      "description": "The language at the site's main address (/). The other language gets its own address, e.g. /sv/."
+    },
+    "turnstileSiteKey": {
+      "description": "Public Turnstile site key (docs/SETUP.md step E). Leave out until then; local testing uses Cloudflare's test key.",
+      "type": "string",
+      "minLength": 1
+    },
+    "aiProvider": {
+      "default": {
+        "name": "Groq",
+        "country": "USA"
+      },
+      "description": "Who generates the AI answers, as named on the privacy page. Must match AI_API_URL in wrangler.jsonc. Default: Groq (USA).",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The company that writes the AI answers, e.g. \"Groq\"."
+        },
+        "country": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Where that company is based, e.g. \"USA\". Shown in brackets after the name."
+        }
+      },
+      "required": [
+        "name",
+        "country"
+      ],
+      "additionalProperties": false
+    },
+    "logRegion": {
+      "default": "EU",
+      "type": "string",
+      "minLength": 1,
+      "description": "Where your live visitor log database is, as named on the privacy page, e.g. \"EU\" or \"USA\". Default: \"EU\". npm run deploy refuses to publish \"EU\" unless the database really is restricted to the EU."
+    }
+  },
+  "required": [
+    "name",
+    "initials",
+    "email",
+    "siteUrl",
+    "languages",
+    "defaultLanguage"
+  ],
+  "additionalProperties": false,
+  "title": "site.json: settings that are the same in every language"
+}

@@ -1,0 +1,42 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 425 >>
+stream
+0.42 0.36 0.84 RG 2 w 48 48 499 746 re S
+BT /F2 22 Tf 72 740 Td (SAMPLE LANGUAGE TEST RESULT) Tj ET
+BT /F1 13 Tf 72 712 Td (Example file for the personal-ai-resume template.) Tj ET
+BT /F1 15 Tf 72 650 Td (Candidate: John Smith) Tj ET
+BT /F1 15 Tf 72 626 Td (Language: Spanish) Tj ET
+BT /F2 15 Tf 72 602 Td (Result: B2 (CEFR)) Tj ET
+BT /F1 12 Tf 72 120 Td (Replace this file with your own test result in content/files/.) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000000727 00000 n 
+0000000797 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+872
+%%EOF

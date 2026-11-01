@@ -1,0 +1,47 @@
+// Admin Worker: the owner's private page for reading the visitor log (SPEC §9).
+// It has its own workers.dev address, which Cloudflare Access protects
+// (docs/SETUP.md step H). The Worker also checks Access's login token itself
+// and refuses everything without it, so a mistake in the Access setup never
+// shows the log to anyone.
+//
+// Not in this file: ACCESS_TEAM_DOMAIN and ACCESS_AUD, the two values from the
+// Access setup. They are stored as secrets of this Worker (SETUP step H).
+// Until then the live admin refuses every request.
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "personal-ai-resume-admin",
+  "main": "index.ts",
+  "compatibility_date": "2026-10-19",
+  // Only the workers.dev address, which Access covers. No preview URLs, so
+  // there is no second address to protect.
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {
+    // The page, its script and styles, built by scripts/build-admin.ts.
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // Every request runs the Worker first, so the login check covers the page too.
+    "run_worker_first": true,
+  },
+  // The same database as the site (../wrangler.jsonc). Locally, `npm run
+  // admin:dev` points both at the same .wrangler/state folder. The live ID is
+  // filled in at deploy time; leave the placeholder below as it is.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "resume-log",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+    },
+  ],
+  // Daily at 02:30 UTC: delete entries older than RETENTION_DAYS.
+  "triggers": {
+    "crons": ["30 2 * * *"],
+  },
+  "vars": {
+    // Shown on the page as "n / limit". Keep them the same as in ../wrangler.jsonc.
+    "DAILY_CAP_CHAT": "30",
+    "DAILY_CAP_FIT": "8",
+    // The privacy page promises 12 months.
+    "RETENTION_DAYS": "365",
+  },
+}

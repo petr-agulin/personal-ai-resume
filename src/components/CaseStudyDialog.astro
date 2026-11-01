@@ -1,0 +1,55 @@
+---
+// One case study as a pop-up (closes with ×, a click outside, or Esc).
+// Without JavaScript it shows as a normal block under the highlights.
+import type { Lang, Locale } from "../content/schema.ts";
+import { t } from "../i18n/index.ts";
+
+type CaseStudy = NonNullable<Locale["highlights"][number]["caseStudy"]>;
+
+interface Props {
+  id: string;
+  lang: Lang;
+  tag: string;
+  title: string;
+  caseStudy: CaseStudy;
+}
+
+const { id, lang, tag, title, caseStudy } = Astro.props;
+const s = t(lang);
+---
+
+<dialog id={id} class="modal modal--case" aria-labelledby={`${id}-title`}>
+  <div class="modal__header">
+    <div class="modal__heading">
+      <div class="modal__eyebrow">{tag} · {s.caseStudy}</div>
+      <h3 id={`${id}-title`} class="modal__title">{title}</h3>
+    </div>
+    <button class="modal__close" type="button" aria-label={s.close} data-close>×</button>
+  </div>
+  <div class="modal__body">
+    {
+      caseStudy.facts.length > 0 && (
+        <dl class="facts">
+          {caseStudy.facts.map((f) => (
+            <div class="fact">
+              <dt class="fact__label">{f.label}</dt>
+              <dd class="fact__value">{f.value}</dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+    {
+      caseStudy.blocks.map((b) => (
+        <div class="case-block">
+          <h4 class="case-block__heading">{b.heading}</h4>
+          <ul class="dash-list">
+            {b.items.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</dialog>

@@ -1,0 +1,12 @@
+# Text files are stored with LF line endings; each OS checks out its own.
+* text=auto
+
+# Binary files: never change their bytes. (A PDF can look like text to git,
+# and converting its line endings would corrupt it.)
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.woff binary
+*.woff2 binary

@@ -1,0 +1,62 @@
+// Site Worker: serves the built pages from dist/ and runs worker/index.ts
+// only for /api/*. Secrets are never named here with values; set them with
+// `npx wrangler secret put <NAME>` (live) or in .dev.vars (local), see
+// dev.vars.example.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "personal-ai-resume",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-10-19",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // Everything else is served straight from dist/ without running the Worker.
+    "run_worker_first": ["/api/*"],
+  },
+  // Cloudflare Workers AI, for searching the hidden notes (embedding model
+  // bge-m3). It always runs on Cloudflare, also during `wrangler dev`, so
+  // local runs need `npx wrangler login` and use the free daily allowance.
+  "ai": {
+    "binding": "AI",
+    "remote": true,
+  },
+  // The visitor log (SPEC §9). Locally it lives in .wrangler/state. The live
+  // one is created once with `npx wrangler d1 create resume-log --jurisdiction=eu`;
+  // its ID stays out of git: `npm run deploy` and `npm run db:live` look it up
+  // by name (scripts/live-config.ts). Leave the placeholder below as it is.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "resume-log",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations",
+    },
+  ],
+  // Per-visitor speed limits, counted per IP address, which is never stored
+  // (SPEC §7). Cloudflare allows a period of 10 or 60 seconds only.
+  "ratelimits": [
+    { "name": "CHAT_LIMITER", "namespace_id": "1001", "simple": { "limit": 6, "period": 60 } },
+    { "name": "FIT_LIMITER", "namespace_id": "1002", "simple": { "limit": 2, "period": 60 } },
+  ],
+  "vars": {
+    // The AI provider and model, set in this one place only (SPEC §6). Any
+    // provider with an OpenAI-compatible chat completions API works: put its
+    // address here, its model name below, its key in the AI_API_KEY secret, and
+    // its name in aiProvider in content/site.json (the privacy page names it).
+    // Tested with Groq.
+    "AI_API_URL": "https://api.groq.com/openai/v1/chat/completions",
+    "AI_MODEL": "openai/gpt-oss-120b",
+    // Daily totals for the whole site (SPEC §7). Keep them near what the Groq
+    // plan allows per day. Free plan: 200,000 tokens/day. Measured October 2026
+    // with the owner's content: about 6,000 per chat question and 6,500 per job
+    // fit, so 30 x 6,000 + 8 x 6,500 = 232,000 can run out on a very busy day
+    // (Groq then asks visitors to wait). On a paid plan they can be much higher.
+    "DAILY_CAP_CHAT": "30",
+    "DAILY_CAP_FIT": "8",
+    // The most a single AI request may send, in tokens (estimated). The page
+    // content and the visitor's text always go in full; the searched notes fill
+    // what's left. Groq's free plan refuses any request over 8,000 tokens per
+    // minute, so this stays below it. Raise it on a paid plan.
+    "MAX_PROMPT_TOKENS": "7000",
+  },
+}

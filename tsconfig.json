@@ -1,0 +1,13 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    // Build scripts run as plain .ts with Node's type stripping, which only
+    // supports syntax it can erase (no enums or namespaces).
+    "erasableSyntaxOnly": true,
+    // TypeScript 6 no longer loads @types packages automatically.
+    "types": ["node"]
+  },
+  "include": [".astro/types.d.ts", "**/*"],
+  // The Workers have their own settings (worker/tsconfig.json, admin/tsconfig.json, admin/client/tsconfig.json).
+  "exclude": ["dist", "_private", "worker", "admin"]
+}

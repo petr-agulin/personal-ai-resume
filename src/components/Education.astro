@@ -1,0 +1,87 @@
+---
+import { viewTarget } from "../content/page.ts";
+import type { Lang, Locale } from "../content/schema.ts";
+import { t } from "../i18n/index.ts";
+import Icon from "./Icon.astro";
+import Section from "./Section.astro";
+
+interface Props {
+  lang: Lang;
+  locale: Locale;
+}
+
+const { lang, locale } = Astro.props;
+const s = t(lang);
+const { degrees, certifications } = locale.education;
+---
+
+<Section id="education" heading={s.headings.education}>
+  <div class="education">
+    {
+      degrees.length > 0 && (
+        <div class="card education__card">
+          <h3 class="card-label">
+            <Icon name="graduation-cap" />
+            {s.degrees}
+          </h3>
+          <ul class="entry-list">
+            {degrees.map((d) => (
+              <li class="entry">
+                <div class="entry__main">
+                  <div class="entry__title">{d.title}</div>
+                  <div class="entry__meta">{d.org}</div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+    {
+      certifications.length > 0 && (
+        <div class="card education__card">
+          <h3 class="card-label">
+            <Icon name="award" />
+            {s.certifications}
+          </h3>
+          <ul class="entry-list">
+            {certifications.map((c) => {
+              const view = viewTarget(c);
+              const body = (
+                <>
+                  <span class="entry__main">
+                    <span class="entry__title">{c.title}</span>
+                    <span class="entry__meta">
+                      <span>{c.org}</span>
+                      {c.year && <span class="entry__year">{c.year}</span>}
+                    </span>
+                  </span>
+                  {view && <span class="view-chip">{s.view}</span>}
+                </>
+              );
+              return (
+                <li>
+                  {view ? (
+                    <a
+                      class="entry"
+                      href={view.href}
+                      target="_blank"
+                      rel="noopener"
+                      data-viewer={view.isFile ? "" : undefined}
+                      data-title={c.title}
+                      data-subtitle={[c.org, c.year].filter(Boolean).join(" · ")}
+                    >
+                      {body}
+                    </a>
+                  ) : (
+                    <div class="entry">{body}</div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )
+    }
+  </div>
+</Section>

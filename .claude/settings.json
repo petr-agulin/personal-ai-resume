@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/.dev.vars)",
+      "Read(**/.dev.vars.*)",
+      "Read(~/.wrangler/**)",
+      "Read(~/AppData/Roaming/xdg.config/.wrangler/**)",
+      "Edit(**/.env)",
+      "Edit(**/.env.*)",
+      "Edit(**/.dev.vars)",
+      "Edit(**/.dev.vars.*)",
+      "Edit(.claude/settings.json)",
+      "Edit(.claude/hooks/**)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell|Read|Edit|Write|Grep|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard-secrets.mjs\"",
+            "timeout": 10,
+            "statusMessage": "Checking for secret files"
+          }
+        ]
+      }
+    ]
+  }
+}

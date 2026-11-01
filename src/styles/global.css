@@ -1,0 +1,1203 @@
+/* Page styles. Values follow the design handoff (Resume.dc.html). */
+
+/* ---------------------------------------------------------------- base */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  /* Keep the scrollbar's space when a pop-up locks scrolling, so nothing shifts. */
+  scrollbar-gutter: stable;
+}
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--violet-light);
+}
+a:hover {
+  color: var(--violet-lighter);
+}
+
+::selection {
+  background: rgba(167, 139, 250, 0.35);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 2px;
+}
+
+.icon {
+  flex: none;
+  display: block;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------------------------------------------------------------- layout */
+
+/* Content column (design README, "Content column and AI gutter").
+   Narrow screens: full width with a 28px gutter.
+   Wide screens (≥1100px): the column is W = min(900, viewport − 460) wide and
+   starts at L = max(0, min((viewport − W) / 2, viewport − W − 428)), so it is
+   centred when there is room and otherwise moves left just enough to keep
+   428px free on the right for the AI panel. Pure CSS, so nothing shifts on load.
+   The percentages resolve against the full page width wherever they are used. */
+:root {
+  --content-w: 100%;
+  --content-l: 0px;
+}
+@media (min-width: 1100px) {
+  :root {
+    --content-w: min(900px, 100% - 460px);
+    --content-l: max(0px, min((100% - var(--content-w)) / 2, 100% - var(--content-w) - 428px));
+  }
+}
+
+/* A full-width band whose content sits in the column. Its top border (section
+   dividers, footer) runs from the column's left edge to the viewport's right edge. */
+.page-block {
+  margin-left: var(--content-l);
+  padding-left: var(--gutter);
+  padding-right: calc(100% - var(--content-l) - var(--content-w) + var(--gutter));
+}
+
+/* ---------------------------------------------------------------- header */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--bg-header);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-divider);
+}
+
+.site-header__inner {
+  min-height: var(--header-height);
+  margin-left: var(--content-l);
+  padding: 12px var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 8px 24px;
+}
+
+/* The nav sits at the far right. Under 1100px it becomes one row that
+   scrolls sideways, and the language switch stays visible next to it. */
+.site-nav {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  gap: 22px;
+  font-size: 14px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.site-nav::-webkit-scrollbar {
+  display: none;
+}
+/* Right-aligned when it fits; scrollable from the start when it doesn't. */
+.site-nav a:first-child {
+  margin-left: auto;
+}
+/* Fades the right edge while there is more to scroll to (set by script). */
+.site-nav.has-more {
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 32px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 32px), transparent);
+}
+
+.site-nav a {
+  flex: none;
+  padding: 4px 0;
+  color: var(--text-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+}
+.site-nav a:hover {
+  color: var(--text-primary);
+}
+/* The nav scrolls, which would clip an outside focus ring. */
+.site-nav a:focus-visible {
+  outline-offset: -2px;
+}
+.site-nav a[aria-current="true"] {
+  color: var(--text-primary);
+  border-bottom-color: var(--violet);
+}
+
+.lang-switch {
+  flex: none;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.lang-switch a {
+  height: 26px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-pill);
+  font: 500 12px var(--font-mono);
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.lang-switch a:hover {
+  color: var(--text-primary);
+}
+.lang-switch a[aria-current="page"] {
+  background: var(--violet);
+  color: var(--on-violet);
+}
+
+/* ---------------------------------------------------------------- hero */
+
+.hero {
+  padding-top: 56px;
+  padding-bottom: 72px;
+  scroll-margin-top: 200px;
+}
+
+.hero__tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid;
+  line-height: 1.6;
+}
+.tag--green {
+  border-color: var(--green-tag-border);
+  background: var(--green-tag-bg);
+  color: var(--green-tag-text);
+}
+.tag--blue {
+  border-color: var(--blue-tag-border);
+  background: var(--blue-tag-bg);
+  color: var(--blue-tag-text);
+}
+
+.hero__name {
+  margin: 22px 0 0;
+  font-weight: 500;
+  font-size: clamp(44px, 7vw, 88px);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.hero__title {
+  margin-top: 14px;
+  font-size: clamp(20px, 2.4vw, 28px);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--violet-light);
+}
+
+.hero__text {
+  margin-top: 28px;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-body);
+}
+.hero__text p {
+  margin: 0;
+  text-wrap: pretty;
+}
+.hero__text strong {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.hero__actions {
+  margin-top: 32px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.button {
+  height: 48px;
+  padding: 0 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 12px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.button--primary {
+  border: none;
+  background: var(--violet);
+  color: var(--on-violet);
+  font-weight: 600;
+}
+.button--primary:hover {
+  background: var(--violet-hover);
+}
+.button--outline {
+  border: 1px solid var(--border-button);
+  background: transparent;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.button--outline:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Without JavaScript the AI panel can't work, so its buttons are hidden. */
+html:not(.js) .needs-js {
+  display: none;
+}
+
+/* ---------------------------------------------------------------- sections */
+
+.section {
+  padding-top: 72px;
+  padding-bottom: 72px;
+  border-top: 1px solid var(--border-divider);
+  scroll-margin-top: var(--header-height);
+}
+
+.section__heading {
+  margin: 0;
+  font: 500 clamp(28px, 3.4vw, 38px) / 1.1 var(--font-sans);
+  letter-spacing: -0.025em;
+}
+
+.section__toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.section__toggle:hover {
+  color: var(--violet-light);
+}
+
+.chevron {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border-button);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.chevron::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-right: 1.5px solid var(--violet);
+  border-bottom: 1.5px solid var(--violet);
+  transform: translateY(-2px) rotate(45deg);
+}
+.section__toggle[aria-expanded="false"] .chevron::before {
+  transform: translateX(-2px) rotate(-45deg);
+}
+
+.section__body {
+  padding-top: 36px;
+}
+.section__body--tight {
+  padding-top: 28px;
+}
+
+/* Card label: mono caps with an icon, used in Skills and Education. */
+.card-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  font: 500 11px var(--font-mono);
+  color: var(--violet-light);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1.6;
+}
+
+.card {
+  padding: 22px 24px;
+  border-radius: var(--radius-card);
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+}
+
+.chips {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.chip {
+  padding: 5px 11px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-chip);
+  background: var(--bg-chip);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-body-3);
+}
+
+.dash-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.dash-list li {
+  display: grid;
+  grid-template-columns: 14px 1fr;
+  gap: 10px;
+  text-wrap: pretty;
+}
+.dash-list li::before {
+  content: "—";
+  color: var(--violet);
+}
+
+/* ---------------------------------------------------------------- highlights */
+
+.highlights {
+  container-type: inline-size;
+}
+
+.highlights__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+@container (min-width: 614px) {
+  .highlights__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Cards are always open and grow with their text, so nothing is ever cut off.
+   Cards in a row share a height (the grid stretches them); the minimum keeps
+   the design's proportions when the text is short. */
+.highlight {
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px 22px 24px;
+  border-radius: var(--radius-card);
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+}
+
+/* Where "Read case study" would be, for a case study not written yet. Not a link. */
+.highlight__soon {
+  margin-top: auto;
+  font: 500 13px var(--font-sans);
+  color: var(--text-muted-2);
+}
+
+.highlight__tag {
+  font: 500 11px var(--font-mono);
+  color: var(--text-muted-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.highlight__title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.highlight__text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-body);
+  text-wrap: pretty;
+}
+
+.link-button {
+  margin-top: auto;
+  align-self: flex-start;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--violet-light);
+  font: 500 13px var(--font-sans);
+  text-decoration: none;
+  cursor: pointer;
+}
+.link-button:hover {
+  color: var(--violet-lighter);
+}
+
+/* ---------------------------------------------------------------- experience */
+
+.jobs {
+  display: flex;
+  flex-direction: column;
+}
+
+.job {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 48px;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--border-divider);
+}
+
+.job__meta {
+  flex: 1 1 220px;
+  max-width: 280px;
+}
+
+.job__dates {
+  font: 400 13px var(--font-mono);
+  color: var(--text-muted-2);
+}
+
+/* Job title first, company under it (owner's choice; the design has them the other way round). */
+.job__title {
+  margin: 10px 0 4px;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  /* Titles are longer than company names and often wrap; keep two lines tight. */
+  line-height: 1.3;
+}
+
+.job__company {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.job__about {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--text-muted-3);
+}
+
+.job__body {
+  flex: 999 1 420px;
+  min-width: 0;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.job__body .dash-list {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-body-2);
+}
+
+/* With JavaScript, only the first 3 bullets show until "+ N more" is clicked.
+   Set before the first paint (the .js class comes from an inline head script),
+   so nothing jumps. Without JavaScript every bullet shows. */
+.js .job:not(.is-expanded) .dash-list > li:nth-child(n + 4) {
+  display: none;
+}
+
+.more-button {
+  align-self: flex-start;
+  margin: 2px 0 0 24px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--violet);
+  font: 500 13px var(--font-mono);
+  cursor: pointer;
+}
+.more-button:hover {
+  color: var(--violet-light);
+}
+
+/* ---------------------------------------------------------------- skills */
+
+.skills {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skills__groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.skills__group {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+.skills__group--wide {
+  flex: 2 1 480px;
+}
+
+/* ---------------------------------------------------------------- education */
+
+.education {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.education__card {
+  flex: 1 1 340px;
+  min-width: 0;
+  padding-bottom: 8px;
+}
+.education__card .card-label {
+  margin-bottom: 6px;
+}
+
+.entry-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.entry-list > li + li {
+  border-top: 1px solid var(--border-divider);
+}
+
+.entry {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  margin: 0;
+  background: none;
+  border: none;
+  text-align: left;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+a.entry:hover {
+  color: var(--violet-light);
+}
+
+.entry__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.entry__title {
+  font-size: 15.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+
+.entry__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
+.entry__year {
+  font: 400 12px var(--font-mono);
+  line-height: inherit;
+  color: var(--text-muted-3);
+}
+
+.view-chip {
+  flex: none;
+  padding: 5px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-accent);
+  background: var(--bg-chip);
+  font: 500 11px var(--font-mono);
+  color: var(--violet-light);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- languages */
+
+.languages {
+  padding: 6px 24px;
+}
+
+.language {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 24px;
+  padding: 16px 0;
+}
+.language + .language {
+  border-top: 1px solid var(--border-divider);
+}
+
+.language__main {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.language__name {
+  font-size: 15.5px;
+  font-weight: 500;
+}
+
+.language__level {
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
+.language__tests {
+  flex: 1 1 300px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.test-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  background: var(--bg-chip);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+a.test-chip:hover {
+  border-color: var(--violet);
+  color: var(--text-primary);
+}
+
+.test-chip__result {
+  font: 500 11.5px var(--font-mono);
+  color: var(--green);
+}
+
+.test-chip__view {
+  color: var(--violet-light);
+}
+
+/* ---------------------------------------------------------------- projects */
+
+.projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: 12px;
+}
+
+.project {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.15s;
+}
+.project:hover {
+  border-color: var(--border-accent);
+}
+
+.project__title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.6;
+}
+
+.project__text {
+  margin: 0;
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-body);
+  text-wrap: pretty;
+}
+
+.project__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.pill-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 14px 0 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-button);
+  background: var(--bg-chip);
+  color: var(--text-primary);
+  font: 500 13px var(--font-sans);
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+.pill-link .icon {
+  color: var(--text-body-3);
+}
+.pill-link:hover {
+  border-color: var(--violet);
+  color: var(--text-primary);
+}
+
+.pill-link--accent {
+  border-color: rgba(167, 139, 250, 0.4);
+  background: rgba(167, 139, 250, 0.1);
+  color: var(--violet-lighter);
+}
+.pill-link--accent .icon {
+  color: var(--violet-light);
+}
+.pill-link--accent:hover {
+  color: var(--violet-lighter);
+}
+
+/* ---------------------------------------------------------------- interests */
+
+.interests {
+  max-width: 720px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.interest {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 4px;
+}
+.interest + .interest {
+  border-top: 1px solid var(--border-divider);
+}
+
+.interest__icon {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(167, 139, 250, 0.1);
+  color: var(--violet-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.interest__body {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 12px;
+}
+
+.interest__name {
+  font-size: 15px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.interest__text {
+  font-size: 14px;
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+/* ---------------------------------------------------------------- contact */
+
+.contact {
+  padding-bottom: 96px;
+}
+.contact .section__heading {
+  margin-bottom: 20px;
+}
+
+.contact__question {
+  margin: 0;
+  max-width: 720px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-body);
+  text-wrap: pretty;
+}
+
+.contact__lines {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.contact__line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+.contact__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 18px 0 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-button);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font: 500 14px var(--font-sans);
+  text-decoration: none;
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
+}
+.contact-link .icon {
+  color: var(--violet-light);
+}
+.contact-link:hover {
+  border-color: var(--violet);
+  background: var(--bg-button-hover);
+  color: var(--text-primary);
+}
+
+/* ---------------------------------------------------------------- pop-ups */
+
+.modal {
+  width: min(760px, 100% - 48px);
+  max-width: none;
+  max-height: calc(100dvh - 48px);
+  padding: 0;
+  border-radius: var(--radius-modal);
+  color: var(--text-primary);
+  overflow: hidden;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.7);
+}
+.modal[open] {
+  display: flex;
+  flex-direction: column;
+}
+.modal::backdrop {
+  background: rgba(6, 5, 9, 0.72);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.modal--case {
+  border: 1px solid var(--border-chip);
+  background: #16151c;
+}
+
+.modal--viewer {
+  width: min(900px, 100% - 48px);
+  border: 1px solid var(--border-accent);
+  background: #1c1a26;
+}
+
+.modal__header {
+  flex: none;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 22px 20px 18px 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.modal__header--compact {
+  align-items: center;
+  padding: 16px 18px 16px 22px;
+}
+
+.modal__heading {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal__eyebrow {
+  font: 500 11px var(--font-mono);
+  color: var(--text-muted-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.modal__title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.modal__close {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border-chip);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color 0.15s,
+    background-color 0.15s;
+}
+.modal__close:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.modal__body {
+  overflow-y: auto;
+  padding: 24px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.facts {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.fact {
+  padding: 12px 14px;
+  border-radius: var(--radius-tile);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #1c1a24;
+}
+
+.fact__label {
+  font: 500 10.5px var(--font-mono);
+  color: var(--text-muted-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.fact__value {
+  margin: 4px 0 0;
+  font-size: 14px;
+}
+
+.case-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.case-block__heading {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.case-block .dash-list {
+  gap: 8px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-body-2);
+}
+
+.viewer__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.viewer__subtitle {
+  margin-top: -4px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.viewer__media {
+  flex: 1;
+  min-height: 0;
+  padding: 18px;
+  background: #15131d;
+  overflow: auto;
+}
+.viewer__media img {
+  display: block;
+  max-width: 100%;
+  max-height: 70vh;
+  margin: 0 auto;
+  border-radius: var(--radius-tile);
+}
+.viewer__media iframe {
+  display: block;
+  width: 100%;
+  height: min(70vh, 720px);
+  border: none;
+  border-radius: var(--radius-tile);
+  background: #fff;
+}
+
+/* Without JavaScript, case studies show as normal blocks under the highlights. */
+html:not(.js) .modal--case {
+  position: static;
+  display: block;
+  width: auto;
+  max-height: none;
+  margin: 12px 0 0;
+  box-shadow: none;
+  scroll-margin-top: calc(var(--header-height) + 12px);
+}
+html:not(.js) .modal__close {
+  display: none;
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.site-footer {
+  padding-top: 24px;
+  padding-bottom: 40px;
+  border-top: 1px solid var(--border-divider);
+  font: 400 12px var(--font-mono);
+  color: var(--text-muted-3);
+}
+.site-footer a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.site-footer a:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+}
+
+/* ---------------------------------------------------------------- privacy page */
+
+/* In the header, where the resume has its section links. */
+.back-link {
+  flex: 1 1 auto;
+  padding: 4px 0;
+  font-size: 14px;
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.back-link:hover {
+  color: var(--text-primary);
+}
+
+.privacy {
+  padding-top: 56px;
+  padding-bottom: 96px;
+}
+
+.privacy p {
+  margin: 0;
+  max-width: 720px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-body);
+  text-wrap: pretty;
+}
+.privacy .privacy__intro {
+  margin-top: 20px;
+}
+
+.privacy__part {
+  margin-top: 32px;
+}
+.privacy__part h2 {
+  margin: 0 0 6px;
+  font: 500 18px / 1.3 var(--font-sans);
+  letter-spacing: -0.01em;
+}

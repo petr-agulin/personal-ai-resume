@@ -1,0 +1,929 @@
+/* AI panel and the "Ask my AI" button. Values follow AiChat.dc.html and the
+   README's layout rules: on wide screens the panel sits in the reserved right
+   gutter (nothing moves when it opens); under 1100px it is a bottom sheet. */
+
+/* ---------------------------------------------------------------- launcher */
+
+.ai-launcher {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 40;
+  height: 60px;
+  padding: 0 26px 0 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(167, 139, 250, 0.5);
+  background: linear-gradient(180deg, #2a2540, #1f1b2e);
+  color: var(--text-primary);
+  font: 500 16px var(--font-sans);
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+.ai-launcher:hover {
+  background: #231f30;
+}
+
+.ai-launcher__dot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--violet);
+  animation: ai-pulse 2s infinite;
+}
+
+@keyframes ai-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(167, 139, 250, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(167, 139, 250, 0);
+  }
+}
+
+.ai-open .ai-launcher {
+  display: none;
+}
+
+/* ---------------------------------------------------------------- panel */
+
+.ai-panel {
+  position: fixed;
+  z-index: 50;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  background: linear-gradient(180deg, #221e30 0%, #1c1a26 220px);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+  /* Wide screens: a floating card in the reserved gutter. */
+  right: 24px;
+  bottom: 24px;
+  width: 380px;
+  height: min(600px, 100dvh - 108px);
+  border-radius: var(--radius-modal);
+  border: 1px solid rgba(167, 139, 250, 0.4);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+}
+.ai-panel:focus {
+  outline: none;
+}
+.ai-open .ai-panel {
+  display: flex;
+}
+/* Restoring an open panel after switching language: keep its body blank for
+   the moment before the script fills in the conversation. */
+.ai-restoring .ai-panel .ai-ask,
+.ai-restoring .ai-panel .ai-fit {
+  visibility: hidden;
+}
+
+/* Under 1100px: a bottom sheet. The page gets matching space at the bottom,
+   so everything can still be scrolled into view above it. */
+@media (max-width: 1099.98px) {
+  .ai-panel {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: 60dvh;
+    border: none;
+    border-top: 1px solid rgba(167, 139, 250, 0.4);
+    border-radius: var(--radius-modal) var(--radius-modal) 0 0;
+    box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.5);
+  }
+  .ai-open body {
+    padding-bottom: 60dvh;
+  }
+}
+
+.ai-panel__header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 16px 12px 18px;
+}
+
+.ai-avatar {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #23202e;
+  border: 1px solid rgba(167, 139, 250, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 500 12px var(--font-mono);
+  color: var(--violet-light);
+}
+
+.ai-panel__who {
+  flex: 1;
+  min-width: 0;
+}
+
+.ai-panel__name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.ai-panel__subtitle {
+  font-size: 12px;
+  color: var(--text-muted-2);
+}
+
+.ai-panel__close {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  color: #9a98a6;
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    color 0.15s,
+    background-color 0.15s;
+}
+.ai-panel__close:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+}
+
+/* "About wait times" (i), next to the assistant's name. */
+.ai-panel__name {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.ai-info {
+  flex: none;
+  width: 22px;
+  /* No taller than the name's line, so the header keeps its height. */
+  height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    color 0.15s,
+    background-color 0.15s;
+}
+.ai-info:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+}
+.ai-info[aria-expanded="true"] {
+  color: var(--violet-light);
+}
+
+/* The note about wait times, under the mode switch when opened. */
+.ai-limits {
+  flex: none;
+  margin: 12px 16px 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #15131d;
+  border: 1px solid var(--border-card);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-body);
+}
+.ai-limits:focus {
+  outline: none;
+}
+.ai-limits[hidden] {
+  display: none;
+}
+.ai-limits__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.ai-limits__title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.ai-limits__close {
+  flex: none;
+  margin: -4px -6px 0 0;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #9a98a6;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+.ai-limits__close:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+}
+.ai-limits p {
+  margin: 0;
+}
+.ai-limits p + p {
+  margin-top: 6px;
+}
+
+/* "Why?" after a wait or limit notice: opens the note above. */
+.ai-why {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--violet-light);
+  font: inherit;
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.ai-why:hover {
+  color: var(--violet-lighter);
+}
+.ai-why[hidden] {
+  display: none;
+}
+
+/* Mode switch */
+.ai-modes {
+  flex: none;
+  margin: 0 16px 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  background: #15131d;
+  border: 1px solid var(--border-card);
+  border-radius: 10px;
+  position: relative;
+}
+/* The divider under the mode switch, full panel width. */
+.ai-modes::after {
+  content: "";
+  position: absolute;
+  left: -17px;
+  right: -17px;
+  bottom: -13px;
+  height: 1px;
+  background: var(--border-card);
+}
+
+/* The bot check's widget. Turnstile keeps it invisible ("interaction-only")
+   unless Cloudflare needs the visitor to click a checkbox. */
+.ai-turnstile {
+  flex: none;
+  margin: 0 16px;
+}
+
+.ai-mode {
+  height: 32px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-muted-2);
+  font: 500 13px var(--font-sans);
+  cursor: pointer;
+}
+.ai-mode:hover {
+  color: var(--text-primary);
+}
+.ai-mode[aria-pressed="true"] {
+  background: #363048;
+  color: var(--text-primary);
+  box-shadow: inset 0 0 0 1px rgba(167, 139, 250, 0.35);
+}
+
+/* Which mode shows (set on <html> before the first paint when restoring). */
+.ai-fit {
+  display: none;
+}
+html[data-ai-view="fit"] .ai-ask {
+  display: none;
+}
+html[data-ai-view="fit"] .ai-fit {
+  display: flex;
+}
+
+/* ---------------------------------------------------------------- shared bits */
+
+.ai-caption {
+  font: 500 11px var(--font-mono);
+  color: var(--text-muted-3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.ai-disclaimer {
+  margin: 8px 0 0;
+  padding: 0 4px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-muted-3);
+}
+
+.ai-counter {
+  margin-top: 6px;
+  padding: 0 4px;
+  font: 400 11px var(--font-mono);
+  color: var(--text-muted-2);
+  text-align: right;
+}
+.ai-counter.is-full {
+  color: var(--amber);
+}
+
+.ai-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.ai-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--violet);
+  animation: ai-dot 1.2s infinite ease-in-out;
+}
+.ai-dots span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.ai-dots span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes ai-dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-launcher__dot,
+  .ai-dots span {
+    animation: none;
+  }
+  .ai-dots span {
+    opacity: 0.6;
+  }
+}
+
+.ai-primary {
+  height: 40px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 10px;
+  background: var(--violet);
+  color: var(--on-violet);
+  font: 600 13px var(--font-sans);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.ai-primary:hover {
+  background: var(--violet-hover);
+}
+.ai-primary--tall {
+  height: 42px;
+}
+
+.ai-secondary {
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  color: var(--text-primary);
+  font: 500 13px var(--font-sans);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.ai-secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ---------------------------------------------------------------- ask */
+
+.ai-ask {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-messages {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ai-empty {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.ai-empty .ai-caption {
+  margin-top: 6px;
+}
+.ai-empty[hidden] {
+  display: none;
+}
+
+.ai-thread {
+  display: contents;
+}
+
+.ai-bubble {
+  align-self: flex-start;
+  max-width: 88%;
+  padding: 10px 13px;
+  background: #2a2638;
+  border: 1px solid var(--border-divider);
+  border-radius: 4px 12px 12px 12px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+.ai-bubble--user {
+  align-self: flex-end;
+  max-width: 85%;
+  padding: 9px 13px;
+  background: var(--violet);
+  border: none;
+  color: var(--on-violet);
+  border-radius: 12px 4px 12px 12px;
+}
+/* The page's violet selection highlight is invisible on the violet bubble,
+   so selected text looked unselected. Dark here instead. */
+.ai-bubble--user::selection {
+  background: var(--on-violet);
+  color: var(--violet-lighter);
+}
+.ai-typing {
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+/* While the AI is busy: "Trying again in 12 s…" next to the dots. */
+/* "Trying again in N s… Why?", one line of text that wraps as a whole. */
+.ai-typing__wait {
+  font-size: 13px;
+  color: var(--text-muted);
+  /* The bubble keeps line breaks (pre-wrap); this part shouldn't. */
+  white-space: normal;
+}
+.ai-typing__wait[hidden] {
+  display: none;
+}
+.ai-typing[hidden] {
+  display: none;
+}
+
+.ai-starters {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.ai-starter {
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  background: rgba(167, 139, 250, 0.06);
+  color: #d6ccfb;
+  font: 400 13px var(--font-sans);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.ai-starter:hover {
+  background: rgba(167, 139, 250, 0.14);
+}
+
+.ai-compose {
+  flex: none;
+  padding: 12px 14px 14px;
+  border-top: 1px solid var(--border-card);
+}
+
+.ai-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 5px 5px 14px;
+  background: #15131d;
+  border: 1px solid var(--border-chip);
+  border-radius: 12px;
+}
+.ai-input-row:focus-within {
+  border-color: rgba(167, 139, 250, 0.55);
+}
+
+.ai-input-row input {
+  flex: 1;
+  min-width: 0;
+  height: 34px;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font: 400 14px var(--font-sans);
+}
+.ai-input-row input::placeholder {
+  color: var(--text-muted-3);
+}
+
+.ai-send {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: none;
+  background: var(--violet);
+  color: var(--on-violet);
+  font: 600 16px var(--font-sans);
+  cursor: pointer;
+}
+.ai-send:hover {
+  background: var(--violet-hover);
+}
+
+/* ---------------------------------------------------------------- fit */
+
+.ai-fit {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 18px;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ai-fit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ai-fit-form[hidden],
+.ai-fit-loading[hidden],
+.ai-fit-result[hidden],
+.ai-group[hidden] {
+  display: none;
+}
+/* The length note and, near the limit, the counter share one line, so the
+   counter appearing doesn't move anything. */
+.ai-fit-form__limit {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: -4px;
+  font-size: 12px;
+  color: var(--text-muted-2);
+  text-wrap: pretty;
+}
+.ai-fit-form .ai-counter {
+  flex: none;
+  margin: 0;
+  padding: 0;
+}
+.ai-fit-form .ai-disclaimer {
+  margin: 0;
+  padding: 0;
+}
+
+.ai-fit-form__heading {
+  font-weight: 500;
+}
+
+.ai-fit-form__intro {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted-2);
+  text-wrap: pretty;
+}
+
+.ai-fit-form textarea {
+  min-height: 200px;
+  resize: vertical;
+  padding: 12px 14px;
+  background: #15131d;
+  border: 1px solid var(--border-chip);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font: 400 13px / 1.55 var(--font-sans);
+  outline: none;
+}
+.ai-fit-form textarea:focus {
+  border-color: rgba(167, 139, 250, 0.55);
+}
+.ai-fit-form textarea::placeholder {
+  color: var(--text-muted-3);
+}
+
+.ai-fit-error {
+  font-size: 13px;
+  color: var(--error);
+}
+
+.ai-fit-loading {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 40px 0;
+  color: var(--text-muted-2);
+  font-size: 13px;
+}
+
+.ai-fit-result {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.ai-verdict {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: #262233;
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-card-sm);
+}
+
+.ai-score {
+  --score: 0;
+  flex: none;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: conic-gradient(var(--violet) calc(var(--score) * 3.6deg), rgba(255, 255, 255, 0.08) 0);
+}
+
+.ai-score__inner {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  background: #262233;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ai-score__number {
+  font: 600 22px / 1 var(--font-sans);
+}
+
+.ai-score__of {
+  margin-top: 3px;
+  font: 500 9px var(--font-mono);
+  color: var(--text-muted-2);
+}
+
+.ai-verdict__text {
+  min-width: 0;
+}
+
+.ai-verdict__label {
+  font: 500 11px var(--font-mono);
+  color: var(--violet-light);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.ai-verdict__summary {
+  margin-top: 4px;
+  font-size: 14px;
+  text-wrap: pretty;
+}
+
+.ai-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ai-list,
+.ai-tiles {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ai-list li {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 8px;
+}
+.ai-list li::before {
+  font-weight: 600;
+}
+.ai-list--match li::before {
+  content: "+";
+  color: var(--green);
+}
+.ai-list--gaps li::before {
+  content: "–";
+  color: var(--amber);
+}
+
+.ai-list__title {
+  font-weight: 500;
+}
+.ai-list__detail {
+  color: var(--text-muted);
+}
+
+.ai-tile {
+  padding: 10px 12px;
+  background: #221f2e;
+  border: 1px solid var(--border-divider);
+  border-radius: var(--radius-tile);
+}
+
+.ai-tile__role {
+  font: 500 11px var(--font-mono);
+  color: var(--violet-light);
+}
+
+.ai-tile__point {
+  margin-top: 3px;
+  font-size: 13px;
+  color: var(--text-body-3);
+  text-wrap: pretty;
+}
+
+.ai-share {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #221f2e;
+  border: 1px solid var(--border-card);
+}
+
+.ai-share__title {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.ai-share__buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.ai-share__button {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 10px;
+  border: 1px solid var(--border-button);
+  background: #15131d;
+  color: var(--text-primary);
+  font: 500 13px var(--font-sans);
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.ai-share__button .icon {
+  color: var(--violet-light);
+}
+.ai-share__button:hover {
+  border-color: var(--violet);
+  color: var(--text-primary);
+}
+
+.ai-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ai-actions .ai-primary {
+  flex: 1;
+}
+
+/* ---------------------------------------------------------------- print report */
+
+/* "Download PDF" fills .print-report and prints only that. */
+.print-report {
+  display: none;
+}
+
+@media print {
+  html.printing-report body {
+    padding: 0;
+    background: #fff;
+  }
+  html.printing-report body > :not(.print-report) {
+    display: none !important;
+  }
+  html.printing-report .print-report {
+    display: block;
+    max-width: 680px;
+    margin: 0 auto;
+    color: #1a1820;
+    font: 14px / 1.55 var(--font-sans);
+  }
+  .print-report h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+  }
+  .print-report h2 {
+    margin: 24px 0 8px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6b5bd6;
+  }
+  .print-report ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+  .print-report li {
+    margin: 4px 0;
+  }
+  .print-report__sub {
+    margin: 4px 0 20px;
+    color: #666;
+  }
+  .print-report__score {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+  }
+  .print-report__number {
+    font-size: 32px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .print-report__number span {
+    font-size: 14px;
+    font-weight: 400;
+    color: #888;
+  }
+  .print-report__footer {
+    margin-top: 32px;
+    font-size: 12px;
+    color: #888;
+  }
+}

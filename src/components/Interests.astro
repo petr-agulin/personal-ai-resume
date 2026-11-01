@@ -1,0 +1,32 @@
+---
+import type { Lang, Locale } from "../content/schema.ts";
+import { t } from "../i18n/index.ts";
+import Icon from "./Icon.astro";
+import Section from "./Section.astro";
+
+interface Props {
+  lang: Lang;
+  locale: Locale;
+}
+
+const { lang, locale } = Astro.props;
+const s = t(lang);
+---
+
+<Section id="interests" heading={s.headings.interests} tight>
+  <ul class="interests">
+    {
+      locale.interests.map((i) => (
+        <li class="interest">
+          <span class="interest__icon">
+            <Icon name={i.icon} />
+          </span>
+          <div class="interest__body">
+            <div class="interest__name">{i.name}</div>
+            <div class="interest__text">{i.text}</div>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</Section>

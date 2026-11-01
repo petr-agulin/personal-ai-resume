@@ -1,0 +1,102 @@
+---
+// The HTML document: <head> with meta tags, fonts and styles.
+import "@fontsource-variable/geist";
+import "@fontsource-variable/geist-mono";
+import geistUrl from "@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url";
+import geistMonoUrl from "@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2?url";
+import "../styles/tokens.css";
+import "../styles/global.css";
+import "../styles/ai-panel.css";
+
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+import type { Content } from "../content/load.ts";
+import { pagePath } from "../content/page.ts";
+import type { Lang, Site } from "../content/schema.ts";
+import { t } from "../i18n/index.ts";
+
+interface Props {
+  content: Content;
+  lang: Lang;
+  title: string;
+  description: string;
+  /** This page's address in each language (for canonical and hreflang). Default: the resume. */
+  path?: (lang: Lang, site: Site) => string;
+  ogType?: string;
+  /** Whether the page has the AI panel, whose open state the head script restores. */
+  panel?: boolean;
+}
+
+const { content, lang, title, description, path = pagePath, ogType = "profile", panel = true } = Astro.props;
+const { site } = content;
+const base = site.siteUrl.replace(/\/+$/, "");
+const url = (l: Lang) => `${base}${path(l, site)}`;
+const ogImage = existsSync(join(content.dir, "files", "og-image.png")) ? `${base}/files/og-image.png` : null;
+const others = site.languages.filter((l) => l !== lang);
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <!-- interactive-widget: on Android the on-screen keyboard shrinks the page,
+         so the AI panel's input stays visible above it. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0d0c11" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={url(lang)} />
+    {
+      site.languages.length > 1 &&
+        site.languages.map((l) => <link rel="alternate" hreflang={l} href={url(l)} />)
+    }
+    {site.languages.length > 1 && <link rel="alternate" hreflang="x-default" href={url(site.defaultLanguage)} />}
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={url(lang)} />
+    <meta property="og:locale" content={t(lang).ogLocale} />
+    {others.map((l) => <meta property="og:locale:alternate" content={t(l).ogLocale} />)}
+    {
+      ogImage && (
+        <>
+          <meta property="og:image" content={ogImage} />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
+        </>
+      )
+    }
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
+    <link rel="preload" href={geistUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={geistMonoUrl} as="font" type="font/woff2" crossorigin />
+
+    <!-- Runs before the first paint: marks the page as scripted, so
+         JavaScript-only states (collapsed rows, "+ N more") apply without
+         anything jumping, and restores an open AI panel after a language
+         switch (state is in sessionStorage; see src/scripts/ai/panel.ts). -->
+    {
+      panel && (
+        <script is:inline>
+          (function () {
+            var root = document.documentElement;
+            root.classList.add("js");
+            try {
+              var s = JSON.parse(sessionStorage.getItem("ai-panel") || "null");
+              if (s && s.mode === "fit") root.dataset.aiView = "fit";
+              if (s && s.open) root.classList.add("ai-open", "ai-restoring");
+            } catch (e) {}
+          })();
+        </script>
+      )
+    }
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

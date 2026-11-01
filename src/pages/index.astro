@@ -1,0 +1,9 @@
+---
+// The resume in the default language, at "/".
+import ResumePage from "../components/ResumePage.astro";
+import { loadContent } from "../content/load.ts";
+
+const content = loadContent();
+---
+
+<ResumePage content={content} lang={content.site.defaultLanguage} />

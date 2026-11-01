@@ -1,0 +1,16 @@
+{
+  "$schema": "../schema/site.schema.json",
+  "name": "John Smith",
+  "initials": "JS",
+  "email": "john@example.com",
+  "linkedin": "https://example.com/linkedin",
+  "github": "https://example.com/github",
+  "siteUrl": "https://example.com",
+  "languages": ["en", "sv"],
+  "defaultLanguage": "en",
+  "aiProvider": {
+    "name": "Groq",
+    "country": "USA"
+  },
+  "logRegion": "EU"
+}

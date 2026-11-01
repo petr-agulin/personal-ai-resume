@@ -1,0 +1,25 @@
+---
+import { SECTIONS, hasContent, pagePath } from "../content/page.ts";
+import type { Lang, Locale, Site } from "../content/schema.ts";
+import { t } from "../i18n/index.ts";
+import LangSwitch from "./LangSwitch.astro";
+
+interface Props {
+  lang: Lang;
+  site: Site;
+  locale: Locale;
+}
+
+const { lang, site, locale } = Astro.props;
+const s = t(lang);
+const ids = ["top", ...SECTIONS.filter((id) => hasContent(id, locale)), "contact"] as const;
+---
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <nav class="site-nav" aria-label={s.mainNav}>
+      {ids.map((id, i) => <a href={`#${id}`} aria-current={i === 0 ? "true" : undefined}>{s.nav[id]}</a>)}
+    </nav>
+    <LangSwitch lang={lang} site={site} href={pagePath} />
+  </div>
+</header>

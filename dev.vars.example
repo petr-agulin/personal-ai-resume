@@ -1,0 +1,26 @@
+# Template for your local secrets file. Placeholder values only.
+#
+# How to use it: create a file named .dev.vars (with the leading dot) in this
+# folder, copy this text into it, and put your real values there. .dev.vars
+# stays on your computer: git ignores it, so it never reaches GitHub. Never
+# paste real values into a chat.
+#
+# These values are only used when you run the site on your own computer
+# (npm run dev:ai). The live site on Cloudflare can't read this file. For it,
+# you store each value once with a command in your own terminal, for example
+#   npx wrangler secret put AI_API_KEY
+# It asks for the value, and Cloudflare keeps it encrypted.
+
+# Groq API key (console.groq.com > API Keys). Needed for the AI answers.
+AI_API_KEY="replace-with-your-groq-api-key"
+
+# Turnstile is Cloudflare's free, usually invisible bot check. It stops
+# scripts from using up your AI limits. On your own computer you don't need
+# a real one: use the test secret key from Cloudflare's Turnstile docs
+# ("Testing" page), which always passes.
+TURNSTILE_SECRET="replace-with-turnstile-secret-key"
+
+# Any long random string. It signs the short-lived pass that visitors get
+# after the bot check. Generate one in your own terminal with:
+#   node -e "console.log(crypto.randomUUID()+crypto.randomUUID())"
+PASS_SIGNING_KEY="replace-with-a-long-random-string"

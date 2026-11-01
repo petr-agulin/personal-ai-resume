@@ -1,0 +1,236 @@
+---
+// The AI panel ("Ask about me" chat and "Analyze job fit") and the floating
+// "Ask my AI" button. On wide screens the panel floats in the reserved right
+// gutter; under 1100px it is a bottom sheet. It never opens by itself.
+// Scripts (src/scripts/ai/) add messages and results as plain text.
+import { privacyPath } from "../content/page.ts";
+import type { Lang, Locale, Site } from "../content/schema.ts";
+import { t } from "../i18n/index.ts";
+import { TEST_SITE_KEY } from "../scripts/ai/turnstile.ts";
+import type { PanelConfig } from "../scripts/ai/types.ts";
+import Icon from "./Icon.astro";
+
+interface Props {
+  lang: Lang;
+  site: Site;
+  locale: Locale;
+}
+
+const { lang, site, locale } = Astro.props;
+const s = t(lang);
+const ai = s.ai;
+const { assistant } = locale;
+const firstName = site.firstName ?? site.name.split(/\s+/)[0];
+// Same tab: the conversation and any pasted job ad are kept and come back.
+const privacy = privacyPath(lang, site);
+
+// Limits match the server's (SPEC §7).
+const limits = { chat: 500, jobAdMin: 40, jobAdMax: 6000 };
+
+const config: PanelConfig = {
+  lang,
+  name: site.name,
+  title: locale.hero.title,
+  email: site.email,
+  siteUrl: site.siteUrl,
+  limits,
+  // The test key until site.json has the real one. Local runs always use the test key.
+  turnstileSiteKey: site.turnstileSiteKey ?? TEST_SITE_KEY,
+  strings: {
+    tooShort: ai.tooShort,
+    labels: ai.labels,
+    whereMatch: ai.whereMatch,
+    gaps: ai.gaps,
+    relevant: ai.relevant,
+    fitScore: ai.fitScore,
+    reportTitle: ai.reportTitle,
+    emailSubject: ai.emailSubject(site.name, locale.hero.title),
+    contact: ai.contact,
+    generatedOn: ai.generatedOn(site.siteUrl.replace(/^https?:\/\//, "").replace(/\/+$/, "")),
+    sampleReply: import.meta.env.DEV ? ai.sampleReply : "",
+    errorChat: ai.errorChat(site.email),
+    errorFit: ai.errorFit,
+    busy: ai.busy,
+    waitRetry: ai.waitRetry,
+    busyLater: ai.busyLater,
+    notJobAd: ai.notJobAd,
+    resting: ai.resting(site.email),
+    tooFast: ai.tooFast,
+    verifyFailed: ai.verifyFailed(site.email),
+    jobAdTooLong: ai.jobAdTooLong,
+    tooLargeChat: ai.tooLargeChat,
+    tooLargeFit: ai.tooLargeFit,
+    why: ai.why,
+  },
+};
+---
+
+<button class="ai-launcher needs-js" type="button" aria-label={ai.openLabel(assistant.name)} data-ai-open="">
+  <span class="ai-launcher__dot" aria-hidden="true"></span>
+  {ai.launcher}
+</button>
+
+<aside id="ai-panel" class="ai-panel" aria-label={assistant.name} tabindex="-1" data-config={JSON.stringify(config)}>
+  <div class="ai-panel__header">
+    <div class="ai-avatar" aria-hidden="true">{site.initials}</div>
+    <div class="ai-panel__who">
+      <div class="ai-panel__name">
+        {assistant.name}
+        <!-- Next to the name, so it takes no width from the subtitle. -->
+        <button
+          class="ai-info"
+          type="button"
+          aria-label={ai.limitsButton}
+          title={ai.limitsButton}
+          aria-expanded="false"
+          aria-controls="ai-limits"
+          data-ai-info
+        >
+          <Icon name="info" size={14} />
+        </button>
+      </div>
+      <div class="ai-panel__subtitle">{assistant.subtitle}</div>
+    </div>
+    <button class="ai-panel__close" type="button" aria-label={s.close} data-ai-close>×</button>
+  </div>
+
+  <div class="ai-modes">
+    <button class="ai-mode" type="button" data-ai-mode="ask" aria-pressed="true">{ai.modeAsk}</button>
+    <button class="ai-mode" type="button" data-ai-mode="fit" aria-pressed="false">{ai.modeFit}</button>
+  </div>
+
+  <!-- About wait times: the generic text from the interface strings, plus the
+       owner's own line from content (assistant.limitsNote), if any. -->
+  <section id="ai-limits" class="ai-limits" aria-labelledby="ai-limits-title" tabindex="-1" hidden>
+    <div class="ai-limits__head">
+      <h2 id="ai-limits-title" class="ai-limits__title">{ai.limitsTitle}</h2>
+      <button class="ai-limits__close" type="button" aria-label={s.close} data-ai-limits-close>×</button>
+    </div>
+    <p>{ai.limitsText}</p>
+    {assistant.limitsNote && <p>{assistant.limitsNote}</p>}
+  </section>
+
+  <!-- The Turnstile bot check. Empty and invisible unless Cloudflare asks the
+       visitor to click a checkbox. -->
+  <div class="ai-turnstile"></div>
+
+  <!-- Ask about me -->
+  <div class="ai-ask">
+    <div class="ai-messages" aria-live="polite">
+      <div class="ai-empty">
+        <div class="ai-bubble">{assistant.greeting}</div>
+        {
+          assistant.starters.length > 0 && (
+            <>
+              <div class="ai-caption">{ai.tryAsking}</div>
+              <div class="ai-starters">
+                {assistant.starters.map((q) => (
+                  <button class="ai-starter" type="button" data-starter>
+                    {q}
+                  </button>
+                ))}
+              </div>
+            </>
+          )
+        }
+      </div>
+      <div class="ai-thread"></div>
+      <div class="ai-bubble ai-typing" hidden>
+        <span class="ai-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span class="ai-typing__wait" hidden>
+          <span class="ai-typing__note" aria-hidden="true"></span>
+          <button class="ai-why" type="button" data-ai-why>{ai.why}</button>
+        </span>
+      </div>
+    </div>
+    <form class="ai-compose">
+      <div class="ai-input-row">
+        <input
+          type="text"
+          name="message"
+          maxlength={limits.chat}
+          placeholder={ai.inputPlaceholder}
+          aria-label={ai.inputLabel}
+          autocomplete="off"
+          enterkeyhint="send"
+        />
+        <button class="ai-send" type="submit" aria-label={ai.send}>↑</button>
+      </div>
+      <div class="ai-counter" hidden></div>
+      <p class="ai-disclaimer">{ai.disclaimer} <a href={privacy}>{s.privacyLink}</a></p>
+    </form>
+  </div>
+
+  <!-- Analyze job fit -->
+  <div class="ai-fit">
+    <form class="ai-fit-form">
+      <div class="ai-fit-form__heading">{ai.fitHeading}</div>
+      <p class="ai-fit-form__intro">{ai.fitIntro}</p>
+      <!-- No maxlength: a longer paste stays whole and gets a clear message, instead of being cut. -->
+      <textarea name="jobAd" placeholder={ai.fitPlaceholder} aria-label={ai.fitLabel}></textarea>
+      <div class="ai-fit-form__limit">
+        <span>{ai.fitLimit(limits.jobAdMax.toLocaleString(lang))}</span>
+        <div class="ai-counter" hidden></div>
+      </div>
+      <div class="ai-fit-error" role="alert" hidden></div>
+      <button class="ai-primary ai-primary--tall" type="submit">{ai.analyze}</button>
+      <p class="ai-disclaimer">{ai.disclaimer} {ai.confidential} <a href={privacy}>{s.privacyLink}</a></p>
+    </form>
+
+    <div class="ai-fit-loading" hidden>
+      <span class="ai-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+      <div class="ai-fit-loading__text" data-default={ai.reading}>{ai.reading}</div>
+      <button class="ai-why" type="button" data-ai-why hidden>{ai.why}</button>
+    </div>
+
+    <div class="ai-fit-result" hidden>
+      <div class="ai-verdict">
+        <div class="ai-score">
+          <div class="ai-score__inner">
+            <div class="ai-score__number"></div>
+            <div class="ai-score__of">{ai.outOf}</div>
+          </div>
+        </div>
+        <div class="ai-verdict__text">
+          <div class="ai-verdict__label"></div>
+          <div class="ai-verdict__summary"></div>
+        </div>
+      </div>
+
+      <div class="ai-group">
+        <div class="ai-caption">{ai.whereMatch}</div>
+        <ul class="ai-list ai-list--match"></ul>
+      </div>
+      <div class="ai-group">
+        <div class="ai-caption">{ai.gaps}</div>
+        <ul class="ai-list ai-list--gaps"></ul>
+      </div>
+      <div class="ai-group">
+        <div class="ai-caption">{ai.relevant}</div>
+        <ul class="ai-tiles"></ul>
+      </div>
+
+      <div class="ai-share">
+        <div class="ai-share__title">{ai.share}</div>
+        <div class="ai-share__buttons">
+          <a class="ai-share__button" href="#" data-ai-email>
+            <Icon name="mail" />
+            {ai.emailIt}
+          </a>
+          <button class="ai-share__button" type="button" data-ai-pdf>
+            <Icon name="download" />
+            {ai.downloadPdf}
+          </button>
+        </div>
+      </div>
+
+      <div class="ai-actions">
+        <button class="ai-primary" type="button" data-ai-contact>{ai.contactAbout(firstName)}</button>
+        <button class="ai-secondary" type="button" data-ai-reset>{ai.tryAnother}</button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- Filled and shown only when "Download PDF" opens the print dialog. -->
+<div class="print-report" aria-hidden="true"></div>

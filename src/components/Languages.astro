@@ -1,0 +1,58 @@
+---
+import { viewTarget } from "../content/page.ts";
+import type { Lang, Locale } from "../content/schema.ts";
+import { t } from "../i18n/index.ts";
+import Section from "./Section.astro";
+
+interface Props {
+  lang: Lang;
+  locale: Locale;
+}
+
+const { lang, locale } = Astro.props;
+const s = t(lang);
+---
+
+<Section id="languages" heading={s.headings.languages}>
+  <div class="card languages">
+    {
+      locale.languages.map((l) => (
+        <div class="language">
+          <div class="language__main">
+            <div class="language__name">{l.name}</div>
+            <div class="language__level">{l.level}</div>
+          </div>
+          {l.tests.length > 0 && (
+            <div class="language__tests">
+              {l.tests.map((test) => {
+                const view = viewTarget(test);
+                const body = (
+                  <>
+                    <span>{test.name}</span>
+                    {test.result && <span class="test-chip__result">{test.result}</span>}
+                    {view && <span class="test-chip__view">{s.view}</span>}
+                  </>
+                );
+                return view ? (
+                  <a
+                    class="test-chip"
+                    href={view.href}
+                    target="_blank"
+                    rel="noopener"
+                    data-viewer={view.isFile ? "" : undefined}
+                    data-title={`${l.name}: ${test.name}`}
+                    data-subtitle={test.result ?? ""}
+                  >
+                    {body}
+                  </a>
+                ) : (
+                  <span class="test-chip">{body}</span>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      ))
+    }
+  </div>
+</Section>

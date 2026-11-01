@@ -1,0 +1,406 @@
+/* Admin page styles. Colours and fonts are the site's (tokens.css, copied in by
+   scripts/build-admin.ts); the look follows the design's Analytics.dc.html. */
+
+@font-face {
+  font-family: "Geist Variable";
+  src: url("/fonts/geist.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geist Mono Variable";
+  src: url("/fonts/geist-mono.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font: 400 14px / 1.5 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 2px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------- header */
+
+.top {
+  border-bottom: 1px solid var(--border-divider);
+}
+.top__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px var(--gutter);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
+}
+.brand {
+  font: 500 13px var(--font-mono);
+}
+.brand__sub {
+  color: var(--text-muted-3);
+}
+.top__note {
+  font: 400 12px var(--font-mono);
+  color: var(--text-muted-3);
+}
+
+/* ---------------------------------------------------------------- layout */
+
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px var(--gutter) 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  padding: 18px 20px;
+  border-radius: var(--radius-card-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+}
+.card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.card__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+.card__label {
+  font: 500 11px var(--font-mono);
+  color: var(--text-muted-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status {
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: var(--radius-tile);
+  border: 1px solid rgba(240, 194, 122, 0.35);
+  background: rgba(240, 194, 122, 0.08);
+  color: var(--amber);
+}
+
+.footnote {
+  margin: 0;
+  font: 400 12px var(--font-mono);
+  color: var(--text-muted-3);
+}
+
+/* ---------------------------------------------------------------- numbers */
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
+  gap: 12px;
+  /* Room for the cards before the numbers arrive, so nothing jumps. */
+  min-height: 104px;
+}
+.kpi {
+  padding: 16px 18px;
+  border-radius: var(--radius-card-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+}
+.kpi__value {
+  margin-top: 6px;
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.kpi__value--warn {
+  color: var(--amber);
+}
+.kpi__note {
+  font: 400 12px var(--font-mono);
+  color: var(--text-muted-2);
+}
+
+/* ---------------------------------------------------------------- last error */
+
+.last-error {
+  min-height: 58px;
+}
+.last-error__ok {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-body);
+}
+.last-error__ok::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+}
+.last-error--bad {
+  border-color: rgba(240, 194, 122, 0.35);
+}
+.last-error__line {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+}
+.last-error__text {
+  color: var(--amber);
+  overflow-wrap: anywhere;
+}
+.last-error__note {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--text-muted-2);
+}
+
+/* ---------------------------------------------------------------- filter */
+
+.switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.switch button {
+  height: 28px;
+  padding: 0 12px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-muted);
+  font: 500 12px var(--font-mono);
+  cursor: pointer;
+}
+.switch button:hover {
+  color: var(--text-primary);
+}
+.switch button[aria-pressed="true"] {
+  background: var(--violet);
+  color: var(--on-violet);
+}
+
+/* ---------------------------------------------------------------- entries */
+
+.entries {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.entry {
+  display: grid;
+  /* Wide enough for "18 Sept 2025 23:38", the tag and the language on one line. */
+  grid-template-columns: 250px minmax(0, 1fr) auto;
+  gap: 6px 16px;
+  align-items: start;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-divider);
+}
+
+.entry__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  padding-top: 1px;
+}
+.time {
+  font: 400 12px var(--font-mono);
+  color: var(--text-muted-2);
+  white-space: nowrap;
+}
+.tag {
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-chip);
+  font: 500 11px var(--font-mono);
+  color: var(--text-muted);
+}
+.tag--fit {
+  border-color: var(--border-accent);
+  color: var(--violet-light);
+}
+.tag--error {
+  border-color: rgba(240, 194, 122, 0.35);
+  color: var(--amber);
+}
+.lang {
+  font: 400 11px var(--font-mono);
+  color: var(--text-muted-3);
+}
+
+.entry__text {
+  margin: 0;
+  color: var(--text-body-3);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.entry--error .entry__text {
+  color: var(--amber);
+  font: 400 13px var(--font-mono);
+}
+
+.fit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+}
+.fit__score {
+  font: 500 13px var(--font-mono);
+}
+.fit__score--strong {
+  color: var(--green);
+}
+.fit__score--good {
+  color: var(--violet-light);
+}
+.fit__score--partial {
+  color: var(--amber);
+}
+.fit__score--weak {
+  color: var(--error);
+}
+.fit__label,
+.fit__company {
+  color: var(--text-body);
+}
+.fit__role {
+  color: var(--text-primary);
+}
+
+.jobad {
+  margin-top: 6px;
+}
+.jobad summary {
+  width: fit-content;
+  font: 500 12px var(--font-mono);
+  color: var(--violet-light);
+  cursor: pointer;
+}
+.jobad summary:hover {
+  color: var(--violet-lighter);
+}
+.jobad__text {
+  margin-top: 8px;
+  padding: 12px 14px;
+  border-radius: var(--radius-tile);
+  background: var(--bg-button-hover);
+  color: var(--text-body);
+  font-size: 13px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.entry__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.confirm {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px 12px;
+  font-size: 13px;
+  color: var(--text-body);
+}
+.link-button {
+  padding: 0;
+  border: none;
+  background: none;
+  font: 500 12px var(--font-mono);
+  color: var(--text-muted-2);
+  cursor: pointer;
+}
+.link-button:hover {
+  color: var(--text-primary);
+}
+.link-button--danger {
+  color: var(--error);
+}
+.link-button--danger:hover {
+  color: #f8c4c4;
+}
+.link-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.empty {
+  margin: 0;
+  padding: 16px 0 6px;
+  color: var(--text-muted-2);
+}
+
+.more {
+  margin: 14px 0 2px;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-button);
+  background: transparent;
+  font: 500 13px var(--font-sans);
+  cursor: pointer;
+}
+.more:hover {
+  border-color: var(--violet);
+  background: var(--bg-button-hover);
+}
+.more:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* Phones: time and tags on one line, the text below, Delete under it. */
+@media (max-width: 700px) {
+  :root {
+    --gutter: 16px;
+  }
+  .entry {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .entry__actions {
+    justify-content: flex-start;
+  }
+  .confirm {
+    justify-content: flex-start;
+  }
+}

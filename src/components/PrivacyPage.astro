@@ -1,0 +1,51 @@
+---
+// The privacy page in one language (SPEC §10). The text is in src/i18n/,
+// filled in from site.json: name, email, AI provider and where the log is
+// stored. No scripts, no AI panel.
+import type { Content } from "../content/load.ts";
+import { pagePath, privacyPath } from "../content/page.ts";
+import type { Lang } from "../content/schema.ts";
+import { t } from "../i18n/index.ts";
+import Layout from "../layouts/Layout.astro";
+import Footer from "./Footer.astro";
+import LangSwitch from "./LangSwitch.astro";
+
+interface Props {
+  content: Content;
+  lang: Lang;
+}
+
+const { content, lang } = Astro.props;
+const { site } = content;
+const p = t(lang).privacy(site.name, site.email, site.aiProvider, site.logRegion);
+---
+
+<Layout
+  content={content}
+  lang={lang}
+  title={`${p.title} · ${site.name}`}
+  description={p.description}
+  path={privacyPath}
+  ogType="website"
+  panel={false}
+>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="back-link" href={pagePath(lang, site)}>← {p.back}</a>
+      <LangSwitch lang={lang} site={site} href={privacyPath} />
+    </div>
+  </header>
+  <main class="privacy page-block">
+    <h1 class="section__heading">{p.title}</h1>
+    <p class="privacy__intro">{p.intro}</p>
+    {
+      p.sections.map((section) => (
+        <section class="privacy__part">
+          <h2>{section.heading}</h2>
+          <p>{section.text}</p>
+        </section>
+      ))
+    }
+  </main>
+  <Footer lang={lang} site={site} onPrivacyPage />
+</Layout>

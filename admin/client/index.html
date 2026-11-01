@@ -1,0 +1,50 @@
+<!doctype html>
+<!-- The admin page (SPEC §9). app.ts fills it in from /api/*, as plain text. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#0d0c11" />
+    <title>Visitor log</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/tokens.css" />
+    <link rel="stylesheet" href="/admin.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <header class="top">
+      <div class="top__inner">
+        <div class="brand">resume <span class="brand__sub">/ visitor log</span></div>
+        <div class="top__note">Times in Stockholm time</div>
+      </div>
+    </header>
+
+    <main class="main">
+      <p id="status" class="status" role="alert" hidden></p>
+
+      <section id="kpis" class="kpis" aria-label="Activity"></section>
+
+      <section id="last-error" class="card last-error" aria-label="Last error"></section>
+
+      <section class="card" aria-labelledby="entries-heading">
+        <div class="card__head">
+          <h2 id="entries-heading" class="card__title">Entries</h2>
+          <div class="switch" role="group" aria-label="Show">
+            <button type="button" data-filter="all" aria-pressed="true">All</button>
+            <button type="button" data-filter="chat" aria-pressed="false">Questions</button>
+            <button type="button" data-filter="fit" aria-pressed="false">Job fits</button>
+            <button type="button" data-filter="error" aria-pressed="false">Errors</button>
+          </div>
+        </div>
+        <ol id="entries" class="entries"></ol>
+        <p id="empty" class="empty" hidden>Nothing here yet.</p>
+        <button id="more" class="more" type="button" hidden>Load more</button>
+      </section>
+
+      <p id="footnote" class="footnote"></p>
+    </main>
+  </body>
+</html>

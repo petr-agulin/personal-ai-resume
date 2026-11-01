@@ -1,0 +1,26 @@
+---
+import { privacyPath } from "../content/page.ts";
+import type { Lang, Site } from "../content/schema.ts";
+import { t } from "../i18n/index.ts";
+
+interface Props {
+  lang: Lang;
+  site: Site;
+  /** On the privacy page itself, the link is left out. */
+  onPrivacyPage?: boolean;
+}
+
+const { lang, site, onPrivacyPage = false } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer page-block">
+  © {year} {site.name}{
+    !onPrivacyPage && (
+      <>
+        {" · "}
+        <a href={privacyPath(lang, site)}>{t(lang).privacyLink}</a>
+      </>
+    )
+  }
+</footer>

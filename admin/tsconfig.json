@@ -1,0 +1,20 @@
+{
+  // The admin Worker runs on Cloudflare: Workers types (shared with the site
+  // Worker, same compatibility date), no DOM. The page's script has its own
+  // config in client/.
+  "compilerOptions": {
+    "target": "ES2024",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2024"],
+    "types": [],
+    "strict": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "erasableSyntaxOnly": true,
+    "skipLibCheck": true
+  },
+  "include": ["./*.ts", "../worker/worker-configuration.d.ts"]
+}

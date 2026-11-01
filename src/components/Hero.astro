@@ -1,0 +1,41 @@
+---
+import type { Lang, Locale, Site } from "../content/schema.ts";
+import { boldParts, t } from "../i18n/index.ts";
+
+interface Props {
+  lang: Lang;
+  site: Site;
+  locale: Locale;
+}
+
+const { lang, site, locale } = Astro.props;
+const s = t(lang);
+const { hero } = locale;
+---
+
+<section id="top" class="hero page-block">
+  {
+    hero.tags.length > 0 && (
+      <div class="hero__tags">
+        {hero.tags.map((tag) => (
+          <span class={`tag tag--${tag.tone}`}>{tag.text}</span>
+        ))}
+      </div>
+    )
+  }
+  <h1 class="hero__name">{site.name}</h1>
+  <div class="hero__title">{hero.title}</div>
+  {
+    hero.paragraphs.length > 0 && (
+      <div class="hero__text">
+        {hero.paragraphs.map((p) => (
+          <p>{boldParts(p).map((part) => (part.bold ? <strong>{part.text}</strong> : part.text))}</p>
+        ))}
+      </div>
+    )
+  }
+  <div class="hero__actions needs-js">
+    <button class="button button--primary" type="button" data-ai-open="ask">{s.askButton}</button>
+    <button class="button button--outline" type="button" data-ai-open="fit">{s.fitButton}</button>
+  </div>
+</section>

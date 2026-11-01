@@ -1,0 +1,52 @@
+---
+// The whole resume page in one language.
+import type { Content } from "../content/load.ts";
+import { hasContent } from "../content/page.ts";
+import type { Lang } from "../content/schema.ts";
+import Layout from "../layouts/Layout.astro";
+import AiPanel from "./AiPanel.astro";
+import Contact from "./Contact.astro";
+import Education from "./Education.astro";
+import Experience from "./Experience.astro";
+import Footer from "./Footer.astro";
+import Header from "./Header.astro";
+import Hero from "./Hero.astro";
+import Highlights from "./Highlights.astro";
+import Interests from "./Interests.astro";
+import Languages from "./Languages.astro";
+import Projects from "./Projects.astro";
+import Skills from "./Skills.astro";
+import ViewerDialog from "./ViewerDialog.astro";
+
+interface Props {
+  content: Content;
+  lang: Lang;
+}
+
+const { content, lang } = Astro.props;
+const { site } = content;
+const locale = content.locales[lang]!;
+const show = (id: Parameters<typeof hasContent>[0]) => hasContent(id, locale);
+---
+
+<Layout content={content} lang={lang} title={locale.meta.title} description={locale.meta.description}>
+  <Header lang={lang} site={site} locale={locale} />
+  <main>
+    <Hero lang={lang} site={site} locale={locale} />
+    {show("highlights") && <Highlights lang={lang} locale={locale} />}
+    {show("experience") && <Experience lang={lang} locale={locale} />}
+    {show("skills") && <Skills lang={lang} locale={locale} />}
+    {show("projects") && <Projects lang={lang} locale={locale} />}
+    {show("education") && <Education lang={lang} locale={locale} />}
+    {show("languages") && <Languages lang={lang} locale={locale} />}
+    {show("interests") && <Interests lang={lang} locale={locale} />}
+    <Contact lang={lang} site={site} locale={locale} />
+  </main>
+  <Footer lang={lang} site={site} />
+  <ViewerDialog lang={lang} />
+  <AiPanel lang={lang} site={site} locale={locale} />
+</Layout>
+
+<script>
+  import "../scripts/main.ts";
+</script>

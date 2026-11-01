@@ -1,0 +1,25 @@
+---
+// Inlines a Lucide icon (lucide-static) as SVG at build time.
+// The icon takes the current text colour.
+import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import { dirname, join } from "node:path";
+
+interface Props {
+  name: string;
+  size?: number;
+}
+
+const { name, size = 15 } = Astro.props;
+
+const iconsDir = join(dirname(createRequire(import.meta.url).resolve("lucide-static/package.json")), "icons");
+const svg = readFileSync(join(iconsDir, `${name}.svg`), "utf8")
+  .replace(/<!--[\s\S]*?-->/g, "")
+  .replace(/\sclass="[^"]*"/, "")
+  .replace(/\swidth="24"/, ` width="${size}"`)
+  .replace(/\sheight="24"/, ` height="${size}"`)
+  .replace("<svg", '<svg class="icon" aria-hidden="true" focusable="false"')
+  .trim();
+---
+
+<Fragment set:html={svg} />
